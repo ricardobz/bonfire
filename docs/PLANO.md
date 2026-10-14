@@ -108,7 +108,7 @@ Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo
 2. [x] **Achievements**: regras num arquivo de dados, fácil de estender.
 3. [x] **Card**: template HTML com temas (fundo + paleta + fonte) e PNG via
    headless Chrome. Verificar com screenshot.
-4. [ ] **Skill `/bonfire`**: o wrapper, com preview e escolha de tema.
+4. [x] **Skill `/bonfire`**: o wrapper, com preview e escolha de tema.
 5. [ ] **Fundos**: prompts em [PROMPTS-ARTE.md](PROMPTS-ARTE.md); Ricardo gera no
    Codex, Claude integra.
 6. [ ] *(Depois)* Empacotar como plugin, escrever o README, talvez uma galeria
