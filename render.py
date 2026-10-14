@@ -44,7 +44,7 @@ def format_count(value):
     return str(value)
 
 
-def format_period(period, projects):
+def format_period(period, projects, alias=None):
     start, end = date.fromisoformat(period["from"]), date.fromisoformat(period["to"])
     if start == end:
         span = f"{end:%b} {end.day}, {end.year}"
@@ -52,12 +52,16 @@ def format_period(period, projects):
         span = f"{start:%b} {start.day} – {end.day}, {end.year}"
     else:
         span = f"{start:%b} {start.day} – {end:%b} {end.day}, {end.year}"
+    if alias:
+        return f"{span} · {alias}"
     noun = "project" if projects == 1 else "projects"
     return f"{span} · {projects} {noun}"
 
 
-def period_key(days):
-    return "day" if days == 1 else "week"
+def title_for(theme, period):
+    """Título do período (day/week/sprint/month/all); sem versão própria, usa o da semana."""
+    titles = theme["title"]
+    return titles.get(period.get("kind")) or titles["week"]
 
 
 def stats_html(recap):
@@ -71,15 +75,27 @@ def stats_html(recap):
                    for v, k in stats)
 
 
+def heatmap_rows(heatmap):
+    """Até 7 dias: uma linha por dia. Mais que isso: soma por dia da semana (seg a dom)."""
+    if len(heatmap) <= 7:
+        return [(date.fromisoformat(d["date"]).strftime("%a")[0], d["hours"]) for d in heatmap]
+    weekdays = [[0] * 24 for _ in range(7)]
+    for day in heatmap:
+        row = weekdays[date.fromisoformat(day["date"]).weekday()]
+        for hour, count in enumerate(day["hours"]):
+            row[hour] += count
+    return list(zip("MTWTFSS", weekdays))
+
+
 def heatmap_html(recap):
-    peak = max((h for day in recap["heatmap"] for h in day["hours"]), default=0) or 1
+    rows_data = heatmap_rows(recap["heatmap"])
+    peak = max((h for _, hours in rows_data for h in hours), default=0) or 1
     rows = []
-    for day in recap["heatmap"]:
-        label = date.fromisoformat(day["date"]).strftime("%a")[0]
+    for label, hours in rows_data:
         cells = "".join(
             f'<i class="cell on" style="--level: {0.25 + 0.75 * h / peak:.2f}"></i>' if h
             else '<i class="cell"></i>'
-            for h in day["hours"])
+            for h in hours)
         rows.append(f'<span class="day">{label}</span>{cells}')
     return "".join(rows)
 
@@ -99,7 +115,7 @@ def badges_html(recap):
     return "".join(badges)
 
 
-def build_html(recap, theme_id, themes=None):
+def build_html(recap, theme_id, themes=None, alias=None):
     theme = (themes or load_themes())[theme_id]
     template = Template((CARD_DIR / "card.html").read_text(encoding="utf-8"))
     return template.substitute(
@@ -107,8 +123,8 @@ def build_html(recap, theme_id, themes=None):
         background=theme["background"],
         accent=theme["accent"],
         accent_soft=theme["accent_soft"],
-        title=escape(theme["title"][period_key(recap["period"]["days"])]),
-        period=escape(format_period(recap["period"], recap["projects"])),
+        title=escape(title_for(theme, recap["period"])),
+        period=escape(format_period(recap["period"], recap["projects"], alias)),
         stats=stats_html(recap),
         heatmap=heatmap_html(recap),
         tools=ranked_line("tools", recap["tools"]),
@@ -215,10 +231,11 @@ def main(argv=None):
     parser.add_argument("recap", type=Path, help="JSON gerado pelo recap.py")
     parser.add_argument("--theme", choices=sorted(themes), default="bonfire")
     parser.add_argument("--out", type=Path, default=Path("card.png"))
+    parser.add_argument("--alias", help="nome a mostrar no lugar de 'N projects' (opcional)")
     parser.add_argument("--html", action="store_true", help="grava o HTML em vez do PNG")
     args = parser.parse_args(argv)
 
-    html = build_html(json.loads(args.recap.read_text(encoding="utf-8")), args.theme, themes)
+    html = build_html(json.loads(args.recap.read_text(encoding="utf-8")), args.theme, themes, args.alias)
     if args.html:
         args.out.write_text(html, encoding="utf-8")
     else:

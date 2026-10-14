@@ -120,6 +120,20 @@ class RecapTest(unittest.TestCase):
         self.assertEqual(data["languages"], {"Python": 1, "JavaScript": 1})
         self.assertEqual(data["models"], {"claude-opus-5-5": 4})
 
+    def test_period_kinds(self):
+        week = json.loads(self.run_cli("--days", "7"))["period"]
+        self.assertEqual((week["kind"], week["from"]), ("week", "2026-10-07"))
+        self.assertEqual(json.loads(self.run_cli("--days", "15"))["period"]["kind"], "sprint")
+        self.assertEqual(json.loads(self.run_cli("--days", "30"))["period"]["kind"], "month")
+        self.assertEqual(json.loads(self.run_cli("--days", "3"))["period"]["kind"], "custom")
+
+    def test_all_starts_at_first_log_day(self):
+        data = json.loads(self.run_cli("--days", "all"))
+        self.assertEqual(data["period"], {"days": 2, "kind": "all", "from": "2026-10-12",
+                                          "to": "2026-10-13", "timezone": "-0300"})
+        self.assertEqual([d["date"] for d in data["heatmap"]], ["2026-10-12", "2026-10-13"])
+        self.assertEqual(data["active_days"], 2)
+
     def test_paths_filter(self):
         self.assertEqual(json.loads(self.run_cli("--paths", SECRET_PROJECT))["sessions"], 1)
         self.assertEqual(json.loads(self.run_cli("--paths", "/other"))["sessions"], 0)

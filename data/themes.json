@@ -3,96 +3,176 @@
     "background": "assets/backgrounds/bonfire.png",
     "accent": "#ff9a3c",
     "accent_soft": "#c2531c",
-    "title": {"day": "Quests of the day cleared", "week": "Quests of the week cleared"}
+    "title": {
+      "day": "Quests of the day cleared",
+      "week": "Quests of the week cleared",
+      "sprint": "Quests of the sprint cleared",
+      "month": "Quests of the month cleared",
+      "all": "Every quest cleared so far"
+    }
   },
   "end-of-day": {
     "background": "assets/backgrounds/end-of-day.png",
     "accent": "#f2c46d",
     "accent_soft": "#8a6a3a",
-    "title": {"day": "Today's harvest is in", "week": "This week's harvest is in"}
+    "title": {
+      "day": "Today's harvest is in",
+      "week": "This week's harvest is in",
+      "sprint": "This sprint's harvest is in",
+      "month": "This month's harvest is in",
+      "all": "Every harvest so far"
+    }
   },
   "captains-log": {
     "background": "assets/backgrounds/captains-log.png",
     "accent": "#4fe3d6",
     "accent_soft": "#7b4fd0",
-    "title": {"day": "Missions of the day logged", "week": "Missions of the week logged"}
+    "title": {
+      "day": "Missions of the day logged",
+      "week": "Missions of the week logged",
+      "sprint": "Missions of the sprint logged",
+      "month": "Missions of the month logged",
+      "all": "Complete mission archive"
+    }
   },
   "bench": {
     "background": "assets/backgrounds/bench.png",
     "accent": "#7fb8ff",
     "accent_soft": "#2f5f9e",
-    "title": {"day": "Day explored, progress saved", "week": "Week explored, progress saved"}
+    "title": {
+      "day": "Day explored, progress saved",
+      "week": "Week explored, progress saved",
+      "sprint": "Sprint explored, progress saved",
+      "month": "Month explored, progress saved",
+      "all": "The whole map, explored"
+    }
   },
   "site-of-grace": {
     "background": "assets/backgrounds/site-of-grace.png",
     "accent": "#f5c95a",
     "accent_soft": "#8a6d2a",
-    "title": {"day": "Grace found, day complete", "week": "Grace found, week complete"}
+    "title": {
+      "day": "Grace found, day complete",
+      "week": "Grace found, week complete",
+      "sprint": "Grace found, sprint complete",
+      "month": "Grace found, month complete",
+      "all": "Every grace discovered"
+    }
   },
   "typewriter": {
     "background": "assets/backgrounds/typewriter.png",
     "accent": "#8fd18a",
     "accent_soft": "#3e6b3a",
-    "title": {"day": "Progress typed and saved", "week": "Progress typed and saved"}
+    "title": {
+      "day": "Progress typed and saved",
+      "week": "Progress typed and saved",
+      "all": "The complete archive, typed"
+    }
   },
   "mountain-campfire": {
     "background": "assets/backgrounds/mountain-campfire.png",
     "accent": "#ff8fb8",
     "accent_soft": "#6a4fb0",
-    "title": {"day": "Summit of the day reached", "week": "Summit of the week reached"}
+    "title": {
+      "day": "Summit of the day reached",
+      "week": "Summit of the week reached",
+      "sprint": "Summit of the sprint reached",
+      "month": "Summit of the month reached",
+      "all": "The whole mountain climbed"
+    }
   },
   "save-star": {
     "background": "assets/backgrounds/save-star.png",
     "accent": "#ffe066",
     "accent_soft": "#6b3fa0",
-    "title": {"day": "Filled with determination", "week": "Filled with determination"}
+    "title": {
+      "day": "Filled with determination",
+      "week": "Filled with determination"
+    }
   },
   "save-crystal": {
     "background": "assets/backgrounds/save-crystal.png",
     "accent": "#7fd4ff",
     "accent_soft": "#2f5f9e",
-    "title": {"day": "Day's journey crystallized", "week": "Week's journey crystallized"}
+    "title": {
+      "day": "Day's journey crystallized",
+      "week": "Week's journey crystallized",
+      "sprint": "Sprint's journey crystallized",
+      "month": "Month's journey crystallized",
+      "all": "The whole journey crystallized"
+    }
   },
   "sculptors-idol": {
     "background": "assets/backgrounds/sculptors-idol.png",
     "accent": "#e0503c",
     "accent_soft": "#7a2a1e",
-    "title": {"day": "Rest, then rise again", "week": "Rest, then rise again"}
+    "title": {
+      "day": "Rest, then rise again",
+      "week": "Rest, then rise again"
+    }
   },
   "healing-center": {
     "background": "assets/backgrounds/healing-center.png",
     "accent": "#ff9ec4",
     "accent_soft": "#8a4a64",
-    "title": {"day": "Your team is fully healed", "week": "Your team is fully healed"}
+    "title": {
+      "day": "Your team is fully healed",
+      "week": "Your team is fully healed"
+    }
   },
   "mdr-terminal": {
     "background": "assets/backgrounds/mdr-terminal.png",
     "accent": "#6fe0c8",
     "accent_soft": "#2f6b5a",
-    "title": {"day": "Day's file refined, 100%", "week": "Week's file refined, 100%"}
+    "title": {
+      "day": "Day's file refined, 100%",
+      "week": "Week's file refined, 100%",
+      "sprint": "Sprint's file refined, 100%",
+      "month": "Month's file refined, 100%",
+      "all": "Every file refined, 100%"
+    }
   },
   "awards-night": {
     "background": "assets/backgrounds/awards-night.png",
     "accent": "#f2c94c",
     "accent_soft": "#8a6a1e",
-    "title": {"day": "And the award goes to… you", "week": "And the award goes to… you"}
+    "title": {
+      "day": "And the award goes to… you",
+      "week": "And the award goes to… you",
+      "all": "Lifetime achievement award"
+    }
   },
   "dnd-table": {
     "background": "assets/backgrounds/dnd-table.png",
     "accent": "#ff5a4f",
     "accent_soft": "#7a2a24",
-    "title": {"day": "Campaign session complete", "week": "Campaign session complete"}
+    "title": {
+      "day": "Campaign session complete",
+      "week": "Campaign session complete",
+      "sprint": "Campaign arc complete",
+      "month": "Campaign arc complete",
+      "all": "The whole campaign so far"
+    }
   },
   "fsociety-terminal": {
     "background": "assets/backgrounds/fsociety-terminal.png",
     "accent": "#4fe36b",
     "accent_soft": "#1e6b2e",
-    "title": {"day": "Day's exploit executed", "week": "Week's exploit executed"}
+    "title": {
+      "day": "Day's exploit executed",
+      "week": "Week's exploit executed",
+      "sprint": "Sprint's exploit executed",
+      "month": "Month's exploit executed",
+      "all": "Every exploit executed"
+    }
   },
   "ticket-rail": {
     "background": "assets/backgrounds/ticket-rail.png",
     "accent": "#ff9f4a",
     "accent_soft": "#3a6ea5",
-    "title": {"day": "All tickets out, yes chef", "week": "All tickets out, yes chef"}
+    "title": {
+      "day": "All tickets out, yes chef",
+      "week": "All tickets out, yes chef"
+    }
   }
 }

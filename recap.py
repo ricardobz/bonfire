@@ -17,12 +17,13 @@ import achievements
 import re
 import sys
 from collections import Counter
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from pathlib import Path
 
 DEFAULT_ROOT = Path.home() / ".claude" / "projects"
 SUBAGENT_TOOLS = {"Task", "Agent"}
 FILE_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
+PERIOD_KINDS = {1: "day", 7: "week", 15: "sprint", 30: "month"}
 LANGUAGES = {
     ".py": "Python", ".js": "JavaScript", ".mjs": "JavaScript", ".cjs": "JavaScript",
     ".jsx": "JavaScript", ".ts": "TypeScript", ".tsx": "TypeScript",
@@ -82,8 +83,11 @@ def streak_until(days, last_day):
 
 
 def collect(root, days, paths=None, now=None, idle_minutes=15):
+    """days: número de dias contando hoje, ou "all" para tudo que ainda existe nos logs."""
     now = now or datetime.now().astimezone()
-    start = (now - timedelta(days=days - 1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    kind = "all" if days == "all" else PERIOD_KINDS.get(days, "custom")
+    start = None if days == "all" else (now - timedelta(days=days - 1)).replace(
+        hour=0, minute=0, second=0, microsecond=0)
     idle_gap = timedelta(minutes=idle_minutes)
 
     if paths:
@@ -100,7 +104,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
     tools = Counter()
     models = Counter()
     hours = Counter()
-    heatmap = {(start + timedelta(days=i)).date(): [0] * 24 for i in range(days)}
+    heatmap = {}
     seen_messages, seen_tools = set(), set()
     files_touched = set()
     languages = Counter()
@@ -113,11 +117,11 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
         if ts is None:
             continue
         all_days.add(ts.date())
-        if not (start <= ts <= now):
+        if ts > now or (start and ts < start):
             continue
 
         projects.add(project_dir.name)
-        heatmap[ts.date()][ts.hour] += 1
+        heatmap.setdefault(ts.date(), [0] * 24)[ts.hour] += 1
         hours[ts.hour] += 1
         if not sidechain and entry.get("sessionId"):
             session_times.setdefault(entry["sessionId"], []).append(ts)
@@ -160,6 +164,13 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
                     files_touched.add(file_path)
                     languages[LANGUAGES.get(Path(file_path).suffix.lower(), "Other")] += 1
 
+    if start is None:
+        first_day = min(all_days, default=now.date())
+        start = datetime.combine(first_day, time.min, tzinfo=now.tzinfo)
+        days = (now.date() - first_day).days + 1
+    for i in range(days):
+        heatmap.setdefault((start + timedelta(days=i)).date(), [0] * 24)
+
     sessions = []
     for session_id, times in session_times.items():
         times.sort()
@@ -180,6 +191,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
         "version": 1,
         "period": {
             "days": days,
+            "kind": kind,
             "from": start.date().isoformat(),
             "to": now.date().isoformat(),
             "timezone": now.strftime("%z"),
@@ -213,7 +225,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Resumo agregado do uso do Claude Code.")
-    parser.add_argument("--days", type=int, default=7, help="janela em dias (1 = hoje)")
+    parser.add_argument("--days", type=lambda v: v if v == "all" else int(v), default=7,
+                        help='janela em dias contando hoje (1 = hoje, 7, 15, 30) ou "all"')
     parser.add_argument("--paths", nargs="+", help="só estas pastas de projeto (padrão: todas)")
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT, help=argparse.SUPPRESS)
     parser.add_argument("--now", help=argparse.SUPPRESS)  # ISO, para testes
@@ -221,7 +234,7 @@ def main(argv=None):
                         help="pausa acima disso não conta como tempo ativo")
     parser.add_argument("--out", type=Path, help="grava o JSON aqui em vez do stdout")
     args = parser.parse_args(argv)
-    if args.days < 1:
+    if args.days != "all" and args.days < 1:
         parser.error("--days precisa ser >= 1")
 
     now = parse_ts(args.now) if args.now else None

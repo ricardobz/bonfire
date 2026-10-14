@@ -114,6 +114,12 @@ Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo
 6. [ ] *(Depois)* Empacotar como plugin, escrever o README, talvez uma galeria
    estática no Netlify. Quando estiver no ar, adicionar no portfolio
    (ricardobz.dev).
+7. **Períodos e projeto** (2026-10-14): além de dia e semana, `sprint` (15 dias,
+   tema padrão `mdr-terminal`), `month` (últimos 30 dias, `typewriter`) e `all`
+   (tudo que restar nos logs, `typewriter`); acima de 7 dias o heatmap soma por dia
+   da semana. `--alias` mostra um nome digitado no lugar de "N projects".
+   - [x] A. Coletor (`--days 15|30|all`, `period.kind`) + card (títulos, heatmap, alias)
+   - [ ] B. Skill (`/bonfire sprint|month|all`, `--alias`) + README
 
 ## Decisões em aberto
 
