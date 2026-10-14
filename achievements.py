@@ -31,12 +31,36 @@ def metric_greater_than_sum(recap, metric, others):
     return read_metric(recap, metric) > sum(read_metric(recap, o) for o in others)
 
 
+def metric_at_least_times(recap, metric, other, factor):
+    value = read_metric(recap, metric)
+    return value > 0 and value >= factor * read_metric(recap, other)
+
+
 def count_keys_at_least(recap, metric, value, ignore=()):
     return len([k for k in read_metric(recap, metric) or {} if k not in ignore]) >= value
 
 
 def active_between_hours(recap, **hours):
     return any(any(day["hours"][h] for h in hour_range(**hours)) for day in recap["heatmap"])
+
+
+def only_active_on_weekdays_between_hours(recap, **hours):
+    active = [(date.fromisoformat(day["date"]).weekday(), hour)
+              for day in recap["heatmap"] for hour, count in enumerate(day["hours"]) if count]
+    return bool(active) and all(wd < 5 and hour in hour_range(**hours) for wd, hour in active)
+
+
+def sessions_on_one_day_at_least(recap, value):
+    per_day = {}
+    for s in recap["session_list"]:
+        per_day[s["start"][:10]] = per_day.get(s["start"][:10], 0) + 1
+    return max(per_day.values(), default=0) >= value
+
+
+def resumed_on_another_day(recap, min_wall_minutes):
+    # Different start and end dates, and long enough that it isn't just crossing midnight.
+    return any(s["end"][:10] != s["start"][:10] and s["wall_minutes"] >= min_wall_minutes
+               for s in recap["session_list"])
 
 
 def session_starts_between_hours(recap, **hours):
@@ -58,8 +82,9 @@ def hour_range(**hours):
 
 
 CHECKS = {f.__name__: f for f in (
-    at_least, greater_than, metric_greater_than_sum, count_keys_at_least,
-    active_between_hours, session_starts_between_hours, quick_session, full_weekend,
+    at_least, greater_than, metric_greater_than_sum, metric_at_least_times, count_keys_at_least,
+    active_between_hours, only_active_on_weekdays_between_hours, session_starts_between_hours,
+    sessions_on_one_day_at_least, resumed_on_another_day, quick_session, full_weekend,
 )}
 
 

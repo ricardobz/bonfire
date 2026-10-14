@@ -46,7 +46,7 @@ folder just means choosing which directories to read.
 an optional alias. No prompt, path, file name or code ever leaves. The JSON preview
 is shown before rendering.
 
-## Achievements (first list)
+## Achievements
 
 | Achievement | Rule |
 |---|---|
@@ -60,6 +60,12 @@ is shown before rendering.
 | Cache Lord | cache hit above 90% |
 | Weekend Warrior | Saturday and Sunday |
 | Read the Manual | more Read than Edit + Write |
+| Work-Life Balance | only weekdays, 9am to 6pm |
+| Midnight Oil | activity between midnight and 2am |
+| Burst | 5+ sessions in one day |
+| Unfinished Business | a session resumed on another day (12h+ wall time) |
+| Surgeon | Edit at least 3× Write |
+| Token Tycoon | 1M+ output tokens |
 
 ## Background themes
 

@@ -68,5 +68,47 @@
     "description": "More reads than edits and writes",
     "check": "metric_greater_than_sum",
     "params": {"metric": "tools.Read", "others": ["tools.Edit", "tools.Write"]}
+  },
+  {
+    "id": "work-life-balance",
+    "name": "Work-Life Balance",
+    "description": "Only coded on weekdays, 9am to 6pm",
+    "check": "only_active_on_weekdays_between_hours",
+    "params": {"from": 9, "to": 18}
+  },
+  {
+    "id": "midnight-oil",
+    "name": "Midnight Oil",
+    "description": "Coded between midnight and 2am",
+    "check": "active_between_hours",
+    "params": {"from": 0, "to": 2}
+  },
+  {
+    "id": "burst",
+    "name": "Burst",
+    "description": "5 or more sessions in a single day",
+    "check": "sessions_on_one_day_at_least",
+    "params": {"value": 5}
+  },
+  {
+    "id": "unfinished-business",
+    "name": "Unfinished Business",
+    "description": "Resumed a session on another day",
+    "check": "resumed_on_another_day",
+    "params": {"min_wall_minutes": 720}
+  },
+  {
+    "id": "surgeon",
+    "name": "Surgeon",
+    "description": "At least 3 edits for every new file written",
+    "check": "metric_at_least_times",
+    "params": {"metric": "tools.Edit", "other": "tools.Write", "factor": 3}
+  },
+  {
+    "id": "token-tycoon",
+    "name": "Token Tycoon",
+    "description": "1M or more output tokens",
+    "check": "at_least",
+    "params": {"metric": "tokens.output", "value": 1000000}
   }
 ]
