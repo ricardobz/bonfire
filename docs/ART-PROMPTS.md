@@ -1,22 +1,23 @@
-# Prompts de arte (Codex)
+# Art prompts (Codex)
 
-Fundos dos cards, gerados pelo **Codex CLI** local (`codex exec`, mesmo fluxo do
-`floripa_game`). Cada imagem gasta cota: pedir o ok do Ricardo antes de cada leva.
+Card backgrounds, generated with the local **Codex CLI** (`codex exec`, same workflow
+as `floripa_game`). Every image costs quota: get Ricardo's ok before each batch, and
+run generations one at a time, never in parallel.
 
-> **Sessão Codex (estilo bonfire):** `01a137f3-90b7-7302-a6a6-85a9d4e98daa`
-> (continuar com `codex exec resume <session-id>`, anexando com `-i` os fundos já
-> aprovados para manter o estilo).
+> **Codex session (bonfire style):** `01a137f3-90b7-7302-a6a6-85a9d4e98daa`
+> (continue with `codex exec resume <session-id>`, attaching approved backgrounds
+> with `-i` to keep the style).
 
-Status: ⬜ prompt pendente · 📝 prompt pronto · 🧪 gerado · ✅ aprovado · ❌ rejeitado
+Status: ⬜ prompt pending · 📝 prompt ready · 🧪 generated · ✅ approved · ❌ rejected
 
-Brutos em `ref/<tema>_raw_full.png`, processados em `assets/backgrounds/<tema>.png`
-por `python3 tools/pixelize.py <bruto> <final>` (grade 2x2, 128 cores, 1080x1920);
-nunca editar o processado à mão.
+Raw files in `ref/<theme>_raw_full.png`, processed into
+`assets/backgrounds/<theme>.png` by `python3 tools/pixelize.py <raw> <final>`
+(2x2 grid, 128 colors, 1080x1920); never hand-edit the processed file.
 
-Estilo: **pixel art detalhada** (indie moderna, pixels 2x2, até 128 cores), não
-16-bit chunky.
+Style: **detailed pixel art** (modern indie, 2x2 pixels, up to 128 colors), not
+chunky 16-bit.
 
-## Base comum (prefixo de todos)
+## Shared base (prefix of every prompt)
 
 ```
 Highly detailed modern pixel art, like contemporary atmospheric indie games:
@@ -35,8 +36,8 @@ no characters' faces, no franchise symbols.
 
 ## bonfire: ✅
 
-Abriu a sessão do estilo (sem anexos):
-`codex exec -s workspace-write "<base + cena>"`.
+Opened the style session (no attachments):
+`codex exec -s workspace-write "<base + scene>"`.
 
 ```
 [BASE] Scene: a small bonfire with a rusted straight sword thrust into its coiled
@@ -49,18 +50,18 @@ space below.
 Save the result as ref/bonfire_raw.png in the current directory.
 ```
 
-**Saída (13/10/2026):** o Codex gerou 941x1672 e ele mesmo já reduziu para a grade
-2x2 + 128 cores em `ref/bonfire_raw.png` (1080x1920). O original sem tratamento ficou
-em `ref/bonfire_raw_full.png`; o fundo final sai dele via `tools/pixelize.py`.
-Aprovado e integrado em `assets/backgrounds/bonfire.png`.
+**Output (2026-10-13):** Codex generated 941x1672 and reduced it to the 2x2 grid +
+128 colors itself, in `ref/bonfire_raw.png` (1080x1920). The untouched original is
+`ref/bonfire_raw_full.png`; the final background comes from it via
+`tools/pixelize.py`. Approved and integrated as `assets/backgrounds/bonfire.png`.
 
-## end-of-day (diário): ✅
+## end-of-day (daily): ✅
 
-O painel de pergaminho do resumo fica para o card desenhar (passo 3), não para a
-arte: o fundo mantém o mesmo espaço negativo escuro dos outros.
+The parchment summary panel is left for the card to draw (step 3), not the art: the
+background keeps the same dark negative space as the others.
 
-Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -77,14 +78,13 @@ Save the generated image, unmodified, as ref/end-of-day_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (13/10/2026):** `ref/end-of-day_raw_full.png`, 941x1672 sem tratamento (o gerador
-ignora o 1080x1920 pedido). Aprovado e integrado em
-`assets/backgrounds/end-of-day.png` via `tools/pixelize.py`.
+**Output (2026-10-13):** `ref/end-of-day_raw_full.png`, untouched 941x1672 (the generator ignores the
+requested 1080x1920). Approved and integrated as `assets/backgrounds/end-of-day.png` via `tools/pixelize.py`.
 
 ## captains-log: ✅
 
-Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -100,14 +100,13 @@ Save the generated image, unmodified, as ref/captains-log_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (13/10/2026):** `ref/captains-log_raw_full.png`, 941x1672 sem tratamento (o gerador
-ignora o 1080x1920 pedido). Aprovado e integrado em
-`assets/backgrounds/captains-log.png` via `tools/pixelize.py`.
+**Output (2026-10-13):** `ref/captains-log_raw_full.png`, untouched 941x1672 (the generator ignores the
+requested 1080x1920). Approved and integrated as `assets/backgrounds/captains-log.png` via `tools/pixelize.py`.
 
 ## bench: ✅
 
-Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -123,14 +122,13 @@ Save the generated image, unmodified, as ref/bench_raw_full.png in the current
 directory. Do not resize or post-process it.
 ```
 
-**Saída (13/10/2026):** `ref/bench_raw_full.png`, 941x1672 sem tratamento (o gerador
-ignora o 1080x1920 pedido). Aprovado e integrado em
-`assets/backgrounds/bench.png` via `tools/pixelize.py`.
+**Output (2026-10-13):** `ref/bench_raw_full.png`, untouched 941x1672 (the generator ignores the
+requested 1080x1920). Approved and integrated as `assets/backgrounds/bench.png` via `tools/pixelize.py`.
 
 ## site-of-grace: ✅
 
-Referência: Elden Ring: feixe dourado. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Elden Ring: golden beam. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -147,13 +145,13 @@ Save the generated image, unmodified, as ref/site-of-grace_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/site-of-grace_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/site-of-grace.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/site-of-grace_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/site-of-grace.png` via `tools/pixelize.py`.
 
 ## typewriter: ✅
 
-Referência: Resident Evil: safe room. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Resident Evil: safe room. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -170,13 +168,13 @@ Save the generated image, unmodified, as ref/typewriter_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/typewriter_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/typewriter.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/typewriter_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/typewriter.png` via `tools/pixelize.py`.
 
 ## mountain-campfire: ✅
 
-Referência: Celeste: fogueira na montanha. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Celeste: mountain campfire. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -192,13 +190,13 @@ Save the generated image, unmodified, as ref/mountain-campfire_raw_full.png in t
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/mountain-campfire_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/mountain-campfire.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/mountain-campfire_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/mountain-campfire.png` via `tools/pixelize.py`.
 
 ## save-star: ✅
 
-Referência: Undertale: estrela de save. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Undertale: save star. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -214,13 +212,13 @@ Save the generated image, unmodified, as ref/save-star_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/save-star_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/save-star.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/save-star_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/save-star.png` via `tools/pixelize.py`.
 
 ## save-crystal: ✅
 
-Referência: Final Fantasy: cristal de save. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Final Fantasy: save crystal. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -237,13 +235,13 @@ Save the generated image, unmodified, as ref/save-crystal_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/save-crystal_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/save-crystal.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/save-crystal_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/save-crystal.png` via `tools/pixelize.py`.
 
 ## sculptors-idol: ✅
 
-Referência: Sekiro: ídolo do escultor. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Sekiro: sculptor's idol. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -259,13 +257,13 @@ Save the generated image, unmodified, as ref/sculptors-idol_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/sculptors-idol_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/sculptors-idol.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/sculptors-idol_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/sculptors-idol.png` via `tools/pixelize.py`.
 
 ## healing-center: ✅
 
-Referência: Pokémon: centro de cura / PC. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Pokémon: healing center / PC. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -282,13 +280,13 @@ Save the generated image, unmodified, as ref/healing-center_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/healing-center_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/healing-center.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/healing-center_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/healing-center.png` via `tools/pixelize.py`.
 
 ## mdr-terminal: ✅
 
-Referência: Severance: terminal MDR. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Severance: MDR terminal. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -305,13 +303,13 @@ Save the generated image, unmodified, as ref/mdr-terminal_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/mdr-terminal_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/mdr-terminal.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/mdr-terminal_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/mdr-terminal.png` via `tools/pixelize.py`.
 
 ## awards-night: ✅
 
-Referência: The Office: Dundies. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: The Office: Dundies. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -328,13 +326,13 @@ Save the generated image, unmodified, as ref/awards-night_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/awards-night_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/awards-night.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/awards-night_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/awards-night.png` via `tools/pixelize.py`.
 
 ## dnd-table: ✅
 
-Referência: Stranger Things: mesa de D&D. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Stranger Things: D&D table. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -352,13 +350,13 @@ Save the generated image, unmodified, as ref/dnd-table_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/dnd-table_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/dnd-table.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/dnd-table_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/dnd-table.png` via `tools/pixelize.py`.
 
 ## fsociety-terminal: ✅
 
-Referência: Mr. Robot: terminal. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: Mr. Robot: terminal. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -375,13 +373,13 @@ Save the generated image, unmodified, as ref/fsociety-terminal_raw_full.png in t
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/fsociety-terminal_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/fsociety-terminal.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/fsociety-terminal_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/fsociety-terminal.png` via `tools/pixelize.py`.
 
 ## ticket-rail: ✅
 
-Referência: The Bear: trilho de comandas. Continuar a sessão do estilo, anexando o bonfire:
-`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
+Reference: The Bear: ticket rail. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
 
 ```
 [BASE] The attached image is a STYLE reference only: match its pixel size, level of
@@ -398,5 +396,5 @@ Save the generated image, unmodified, as ref/ticket-rail_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-**Saída (14/10/2026):** `ref/ticket-rail_raw_full.png`, 941x1672 sem tratamento. Aprovado e
-integrado em `assets/backgrounds/ticket-rail.png` via `tools/pixelize.py`.
+**Output (2026-10-14):** `ref/ticket-rail_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/ticket-rail.png` via `tools/pixelize.py`.

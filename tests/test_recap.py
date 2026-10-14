@@ -1,4 +1,4 @@
-"""Testes do coletor. Rodar: python3 -m unittest discover tests"""
+"""Collector tests. Run: python3 -m unittest discover tests"""
 
 import io
 import json
@@ -13,7 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import recap  # noqa: E402
 
-# Tudo que tiver CANARY não pode aparecer no JSON de saída.
+# Nothing containing CANARY may appear in the output JSON.
 CANARY = "CANARY"
 SECRET_PROJECT = "/home/someone/CANARY-secret-project"
 SESSION = "CANARY-session-0001"
@@ -21,7 +21,7 @@ NOW = "2026-10-13T23:00:00+00:00"
 
 
 def setUpModule():
-    # Horas e dias são locais; fixar o fuso deixa o teste igual em qualquer máquina.
+    # Hours and days are local; pinning the timezone makes the test machine-independent.
     os.environ["TZ"] = "America/Sao_Paulo"
     time.tzset()
 
@@ -52,7 +52,7 @@ def fixture_lines():
         {"type": "summary", "summary": "CANARY summary of the conversation"},
         user(t("10:00"), "CANARY prompt: please fix the CANARY bug"),
         assistant(t("10:01"), "m1", [{"type": "text", "text": "CANARY answer"}]),
-        # Mesma resposta em duas linhas: usage não pode contar duas vezes.
+        # Same reply on two lines: usage must not be counted twice.
         assistant(t("10:01"), "m1", [tool("t1", "Edit", file_path="/x/CANARY.py",
                                           old_string="CANARY", new_string="CANARY2")]),
         assistant(t("10:05"), "m2", [tool("t2", "Write", file_path="/x/CANARY.js",
@@ -63,10 +63,10 @@ def fixture_lines():
                                      tool("t6", "Agent", prompt="CANARY task")]),
         user(t("10:06"), [{"type": "tool_result", "tool_use_id": "t4",
                            "content": "CANARY output"}]),
-        # Pausa longa: 10:06 -> 11:00 não conta como tempo ativo.
+        # Long pause: 10:06 -> 11:00 doesn't count as active time.
         user(t("11:00"), "CANARY again"),
         assistant(t("11:04"), "m3", [tool("t7", "Edit", file_path="/x/CANARY.py")]),
-        # Fora da janela de 1 dia, mas conta para o streak.
+        # Outside the 1-day window, but counts for the streak.
         user("2026-10-12T09:00:00Z", "CANARY yesterday"),
     ]
 
@@ -107,7 +107,7 @@ class RecapTest(unittest.TestCase):
     def test_aggregates(self):
         data = json.loads(self.run_cli("--days", "1"))
         self.assertEqual(data["projects"], 1)
-        self.assertEqual(data["sessions"], 1)  # o subagent não vira sessão
+        self.assertEqual(data["sessions"], 1)  # the subagent is not a session
         self.assertEqual(data["active_minutes"], 6 + 4)
         self.assertEqual(data["streak_days"], 2)
         self.assertEqual(data["active_days"], 1)

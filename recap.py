@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Coletor do bonfire: lê os logs do Claude Code e imprime um JSON só com agregados.
+"""bonfire collector: reads Claude Code logs and prints JSON with aggregates only.
 
-Privacidade: nada de prompt, resposta, path, nome de arquivo ou nome de projeto sai
-daqui. O JSON é montado só com números e com valores de listas fechadas (nomes de
-ferramentas, modelos, linguagens).
+Privacy: no prompt, reply, path, file name or project name ever leaves this script.
+The JSON is built only from numbers and from values in closed lists (tool, model and
+language names).
 
-Uso:
+Usage:
     python3 recap.py --days 7
     python3 recap.py --days 1 --paths ~/worktest/bonfire ~/worktest/manezinho-game
 """
@@ -37,7 +37,7 @@ LANGUAGES = {
 
 
 def encode_project_path(path):
-    """Mesmo esquema do Claude Code: tudo que não é alfanumérico vira '-'."""
+    """Same scheme as Claude Code: anything non-alphanumeric becomes '-'."""
     return re.sub(r"[^A-Za-z0-9]", "-", str(Path(path).expanduser().resolve()))
 
 
@@ -49,7 +49,7 @@ def parse_ts(value):
 
 
 def iter_entries(project_dirs):
-    """Gera (diretório do projeto, é_subagent, entrada) para cada linha válida."""
+    """Yields (project dir, is_subagent, entry) for every valid line."""
     for project_dir in project_dirs:
         for log in sorted(project_dir.rglob("*.jsonl")):
             in_subagents = "subagents" in log.relative_to(project_dir).parts
@@ -64,7 +64,7 @@ def iter_entries(project_dirs):
 
 
 def tool_label(name):
-    # Ferramentas de MCP carregam o nome do servidor; agrupar evita vazar isso.
+    # MCP tool names carry the server name; grouping them avoids leaking it.
     return "MCP" if name.startswith("mcp__") else name
 
 
@@ -83,7 +83,7 @@ def streak_until(days, last_day):
 
 
 def collect(root, days, paths=None, now=None, idle_minutes=15):
-    """days: número de dias contando hoje, ou "all" para tudo que ainda existe nos logs."""
+    """days: number of days including today, or "all" for everything still in the logs."""
     now = now or datetime.now().astimezone()
     kind = "all" if days == "all" else PERIOD_KINDS.get(days, "custom")
     start = None if days == "all" else (now - timedelta(days=days - 1)).replace(
@@ -130,7 +130,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
         if entry["type"] != "assistant" or not isinstance(message, dict):
             continue
 
-        # Uma resposta pode vir em várias linhas com o mesmo id e o mesmo usage.
+        # One reply can span several lines with the same id and the same usage.
         message_key = (message.get("id"), entry.get("requestId"))
         if message_key == (None, None) or message_key not in seen_messages:
             seen_messages.add(message_key)
@@ -224,18 +224,18 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Resumo agregado do uso do Claude Code.")
+    parser = argparse.ArgumentParser(description="Aggregated summary of Claude Code usage.")
     parser.add_argument("--days", type=lambda v: v if v == "all" else int(v), default=7,
-                        help='janela em dias contando hoje (1 = hoje, 7, 15, 30) ou "all"')
-    parser.add_argument("--paths", nargs="+", help="só estas pastas de projeto (padrão: todas)")
+                        help='window in days including today (1 = today, 7, 15, 30) or "all"')
+    parser.add_argument("--paths", nargs="+", help="only these project folders (default: all)")
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT, help=argparse.SUPPRESS)
-    parser.add_argument("--now", help=argparse.SUPPRESS)  # ISO, para testes
+    parser.add_argument("--now", help=argparse.SUPPRESS)  # ISO, for tests
     parser.add_argument("--idle-minutes", type=int, default=15,
-                        help="pausa acima disso não conta como tempo ativo")
-    parser.add_argument("--out", type=Path, help="grava o JSON aqui em vez do stdout")
+                        help="pauses longer than this don't count as active time")
+    parser.add_argument("--out", type=Path, help="write the JSON here instead of stdout")
     args = parser.parse_args(argv)
     if args.days != "all" and args.days < 1:
-        parser.error("--days precisa ser >= 1")
+        parser.error("--days must be >= 1")
 
     now = parse_ts(args.now) if args.now else None
     recap = collect(args.root, args.days, args.paths, now, args.idle_minutes)

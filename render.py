@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Renderiza o card do bonfire: JSON do recap + tema -> PNG 1080x1920 via headless Chrome.
+"""Renders the bonfire card: recap JSON + theme -> 1080x1920 PNG via headless Chrome.
 
-Uso:
+Usage:
     python3 recap.py --days 7 --out recap_week.json
     python3 render.py recap_week.json --theme bonfire --out card.png
 """
@@ -59,7 +59,7 @@ def format_period(period, projects, alias=None):
 
 
 def title_for(theme, period):
-    """Título do período (day/week/sprint/month/all); sem versão própria, usa o da semana."""
+    """Title for the period (day/week/sprint/month/all); falls back to the week title."""
     titles = theme["title"]
     return titles.get(period.get("kind")) or titles["week"]
 
@@ -76,7 +76,7 @@ def stats_html(recap):
 
 
 def heatmap_rows(heatmap):
-    """Até 7 dias: uma linha por dia. Mais que isso: soma por dia da semana (seg a dom)."""
+    """Up to 7 days: one row per day. Longer: summed by weekday (Mon to Sun)."""
     if len(heatmap) <= 7:
         return [(date.fromisoformat(d["date"]).strftime("%a")[0], d["hours"]) for d in heatmap]
     weekdays = [[0] * 24 for _ in range(7)]
@@ -138,14 +138,14 @@ def find_chrome():
         path = shutil.which(name)
         if path:
             return path
-    sys.exit("Chrome/Chromium não encontrado (defina BONFIRE_CHROME).")
+    sys.exit("Chrome/Chromium not found (set BONFIRE_CHROME).")
 
 
 class DevTools:
-    """Cliente mínimo do protocolo do Chrome via --remote-debugging-pipe (fd 3 e 4).
+    """Minimal Chrome DevTools protocol client over --remote-debugging-pipe (fd 3 and 4).
 
-    O --screenshot do headless corta a página (a janela de 1920 vira um viewport de
-    ~1833), então controlamos o viewport e o recorte direto pelo protocolo.
+    Headless --screenshot clips the page (a 1920 window becomes a ~1833 viewport), so
+    we set the viewport and the clip directly through the protocol.
     """
 
     def __init__(self, chrome, profile):
@@ -164,8 +164,8 @@ class DevTools:
 
     @staticmethod
     def _map_pipes(read_end, write_end):
-        # O Chrome lê comandos no fd 3 e responde no fd 4. Duplicar antes evita
-        # sobrescrever um pipe que já esteja num desses números.
+        # Chrome reads commands on fd 3 and replies on fd 4. Duplicating first avoids
+        # clobbering a pipe that already sits on one of those numbers.
         read_end, write_end = os.dup(read_end), os.dup(write_end)
         os.dup2(read_end, 3)
         os.dup2(write_end, 4)
@@ -174,7 +174,7 @@ class DevTools:
         while b"\0" not in self.buffer:
             chunk = os.read(self.from_chrome, 65536)
             if not chunk:
-                raise RuntimeError("Chrome fechou o pipe")
+                raise RuntimeError("Chrome closed the pipe")
             self.buffer += chunk
         raw, self.buffer = self.buffer.split(b"\0", 1)
         return json.loads(raw)
@@ -227,12 +227,12 @@ def render_png(html, out):
 
 def main(argv=None):
     themes = load_themes()
-    parser = argparse.ArgumentParser(description="Renderiza o card PNG a partir do JSON do recap.")
-    parser.add_argument("recap", type=Path, help="JSON gerado pelo recap.py")
+    parser = argparse.ArgumentParser(description="Render the PNG card from the recap JSON.")
+    parser.add_argument("recap", type=Path, help="JSON produced by recap.py")
     parser.add_argument("--theme", choices=sorted(themes), default="bonfire")
     parser.add_argument("--out", type=Path, default=Path("card.png"))
-    parser.add_argument("--alias", help="nome a mostrar no lugar de 'N projects' (opcional)")
-    parser.add_argument("--html", action="store_true", help="grava o HTML em vez do PNG")
+    parser.add_argument("--alias", help="name to show instead of 'N projects' (optional)")
+    parser.add_argument("--html", action="store_true", help="write the HTML instead of the PNG")
     args = parser.parse_args(argv)
 
     html = build_html(json.loads(args.recap.read_text(encoding="utf-8")), args.theme, themes, args.alias)

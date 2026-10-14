@@ -1,4 +1,4 @@
-"""Testes dos achievements. Rodar: python3 -m unittest discover tests"""
+"""Achievement tests. Run: python3 -m unittest discover tests"""
 
 import inspect
 import sys
@@ -22,7 +22,7 @@ def base_recap(**overrides):
         "streak_days": 1, "longest_session_minutes": 60, "subagents": 0,
         "cache_hit_rate": 0.5, "tools": {"Read": 1, "Edit": 5},
         "languages": {"Python": 1},
-        "heatmap": [day("2026-10-08", 20)],  # quinta
+        "heatmap": [day("2026-10-08", 20)],  # Thursday
         "session_list": [session("2026-10-08T20:00-03:00")],
     }
     recap.update(overrides)
@@ -63,16 +63,16 @@ class AchievementsTest(unittest.TestCase):
                 self.assertEqual(unlocked(base_recap(**overrides)), {achievement_id})
 
     def test_edge_cases(self):
-        # Speedrun precisa de edit; sessão relâmpago sem mudar código não conta.
+        # Speedrun needs an edit; a lightning session that changes no code doesn't count.
         self.assertEqual(unlocked(base_recap(session_list=[session("2026-10-08T20:00-03:00", 0)])), set())
-        # Domingo + sábado seguinte não é um fim de semana inteiro.
+        # A Sunday plus the following Saturday is not a full weekend.
         self.assertEqual(unlocked(base_recap(heatmap=[day("2026-10-04", 9), day("2026-10-10", 9)])), set())
-        # 'Other' não conta como linguagem.
+        # 'Other' doesn't count as a language.
         langs = dict.fromkeys(["Python", "JavaScript", "HTML", "CSS", "Other"], 1)
         self.assertEqual(unlocked(base_recap(languages=langs)), set())
-        # Write também conta como edição.
+        # Write counts as an edit too.
         self.assertEqual(unlocked(base_recap(tools={"Read": 5, "Edit": 3, "Write": 2})), set())
-        # Ferramenta ausente vale 0.
+        # A missing tool counts as 0.
         self.assertEqual(unlocked(base_recap(tools={"Read": 1})), {"read-the-manual"})
 
 

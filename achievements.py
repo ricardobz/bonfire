@@ -1,7 +1,7 @@
-"""Achievements do bonfire: aplica as regras de data/achievements.json ao JSON do recap.
+"""bonfire achievements: applies the rules in data/achievements.json to the recap JSON.
 
-Para criar um achievement novo, basta adicionar uma entrada no JSON usando um dos
-checks abaixo. Só é preciso mexer aqui quando a regra precisa de um check novo.
+To add an achievement, just add an entry to the JSON using one of the checks below.
+This file only needs changing when a rule needs a new kind of check.
 """
 
 import json
@@ -12,7 +12,7 @@ RULES_FILE = Path(__file__).resolve().parent / "data" / "achievements.json"
 
 
 def read_metric(recap, path):
-    """Lê um valor por caminho com pontos, ex.: 'tools.Read'. Ausente vale 0."""
+    """Reads a value by dotted path, e.g. 'tools.Read'. Missing counts as 0."""
     value = recap
     for key in path.split("."):
         value = value.get(key, 0) if isinstance(value, dict) else 0
@@ -68,7 +68,7 @@ def load_rules(path=RULES_FILE):
 
 
 def evaluate(recap, rules=None):
-    """Lista dos achievements desbloqueados, na ordem do arquivo de regras."""
+    """Unlocked achievements, in rules-file order."""
     return [{"id": r["id"], "name": r["name"], "description": r["description"]}
             for r in (rules if rules is not None else load_rules())
             if CHECKS[r["check"]](recap, **r["params"])]

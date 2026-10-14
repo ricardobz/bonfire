@@ -1,4 +1,4 @@
-"""Testes do card (sem Chrome). Rodar: python3 -m unittest discover tests"""
+"""Card tests (no Chrome). Run: python3 -m unittest discover tests"""
 
 import sys
 import unittest
@@ -41,7 +41,7 @@ class RenderTest(unittest.TestCase):
                 self.assertTrue((render.ROOT / theme["background"]).is_file())
                 html = render.build_html(recap(), theme_id)
                 self.assertIn(escape(theme["title"]["week"]), html)
-                self.assertNotIn("$", html)  # nenhum placeholder sobrando
+                self.assertNotIn("$", html)  # no placeholder left over
 
     def test_day_title_and_badge_overflow(self):
         html = render.build_html(recap(days=1, kind="day"), "end-of-day")
@@ -60,7 +60,7 @@ class RenderTest(unittest.TestCase):
         days = [{"date": f"2026-10-{d:02d}", "hours": [1] + [0] * 23} for d in range(1, 31)]
         rows = render.heatmap_rows(days)
         self.assertEqual([label for label, _ in rows], list("MTWTFSS"))
-        # Out/2026 começa numa quinta: 5 quintas, sextas e sábados; 4 dos outros dias.
+        # Oct 2026 starts on a Thursday: 5 Thursdays, Fridays and Saturdays; 4 of the rest.
         self.assertEqual([hours[0] for _, hours in rows], [4, 4, 4, 5, 5, 4, 4])
         self.assertEqual(len(render.heatmap_rows(days[:7])), 7)
 
