@@ -65,8 +65,8 @@
   {
     "id": "read-the-manual",
     "name": "Read the Manual",
-    "description": "More reads than edits",
-    "check": "metric_greater_than_metric",
-    "params": {"metric": "tools.Read", "other": "tools.Edit"}
+    "description": "More reads than edits and writes",
+    "check": "metric_greater_than_sum",
+    "params": {"metric": "tools.Read", "others": ["tools.Edit", "tools.Write"]}
   }
 ]

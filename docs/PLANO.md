@@ -59,7 +59,7 @@ preview do JSON aparece antes de renderizar.
 | Delegator | 10 ou mais subagents |
 | Cache Lord | cache hit acima de 90% |
 | Weekend Warrior | sábado e domingo |
-| Read the Manual | mais Read do que Edit |
+| Read the Manual | mais Read do que Edit + Write |
 
 ## Temas de fundo
 

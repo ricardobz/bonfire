@@ -55,7 +55,7 @@ class AchievementsTest(unittest.TestCase):
             "delegator": {"subagents": 10},
             "cache-lord": {"cache_hit_rate": 0.91},
             "weekend-warrior": {"heatmap": [day("2026-10-10", 15), day("2026-10-11", 15)]},
-            "read-the-manual": {"tools": {"Read": 6, "Edit": 5}},
+            "read-the-manual": {"tools": {"Read": 6, "Edit": 3, "Write": 2}},
         }
         self.assertEqual(set(cases), {r["id"] for r in achievements.load_rules()})
         for achievement_id, overrides in cases.items():
@@ -70,6 +70,8 @@ class AchievementsTest(unittest.TestCase):
         # 'Other' não conta como linguagem.
         langs = dict.fromkeys(["Python", "JavaScript", "HTML", "CSS", "Other"], 1)
         self.assertEqual(unlocked(base_recap(languages=langs)), set())
+        # Write também conta como edição.
+        self.assertEqual(unlocked(base_recap(tools={"Read": 5, "Edit": 3, "Write": 2})), set())
         # Ferramenta ausente vale 0.
         self.assertEqual(unlocked(base_recap(tools={"Read": 1})), {"read-the-manual"})
 

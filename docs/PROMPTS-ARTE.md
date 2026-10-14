@@ -1,36 +1,62 @@
 # Prompts de arte (Codex)
 
-Fundos dos cards. Gerar tudo **na mesma conversa do Codex** para manter o estilo;
-a partir da segunda imagem, citar as anteriores como referência.
+Fundos dos cards, gerados pelo **Codex CLI** local (`codex exec`, mesmo fluxo do
+`floripa_game`). Cada imagem gasta cota: pedir o ok do Ricardo antes de cada leva.
 
-Status: ⬜ prompt pendente · 📝 prompt pronto · 🎨 gerada (raw em `ref/`) · ✅ integrada
+> **Sessão Codex (estilo bonfire):** `01a137f3-90b7-7302-a6a6-85a9d4e98daa`
+> (continuar com `codex exec resume <session-id>`, anexando com `-i` os fundos já
+> aprovados para manter o estilo).
+
+Status: ⬜ prompt pendente · 📝 prompt pronto · 🧪 gerado · ✅ aprovado · ❌ rejeitado
 
 Brutos em `ref/`, processados em `assets/backgrounds/`; nunca editar o
 processado à mão.
 
+Estilo: **pixel art detalhada** (indie moderna, pixels 2x2, até 128 cores), não
+16-bit chunky.
+
 ## Base comum (prefixo de todos)
 
 ```
+Highly detailed modern pixel art, like contemporary atmospheric indie games:
+fine pixel detail, rich hand-placed shading, subtle dithering, dramatic lighting.
+NOT retro 16-bit, NOT chunky: small pixels and a lot of detail.
 Background art for a shareable stats card, 1080x1920 vertical (9:16 phone format).
-Painterly digital illustration, moody cinematic lighting, slightly desaturated,
-subtle film grain. Leave the CENTER and LOWER 55% as calm, low-detail negative
-space (dark gradient, soft fog) so white text and numbers can be overlaid
-legibly. No text, no logos, no UI, no characters' faces, no franchise symbols.
+The scene sits in the UPPER 45% of the image. The CENTER and LOWER 55% is calm,
+low-detail negative space (dark gradient, faint dithered fog) so white text and
+numbers can be laid over it legibly.
+
+STYLE (mandatory): true pixel art, every pixel is a solid 2x2 px square, hard edges,
+NO anti-aliasing, NO blur, NO painterly smoothing, at most 128 colors.
+NO text, NO letters, NO logos, NO UI, NO frame, NO visible grid,
+no characters' faces, no franchise symbols.
 ```
 
-## bonfire: 📝
+## bonfire: 🧪
+
+Placeholder em SVG (desenhado pelo Claude) em `assets/backgrounds/bonfire.svg` até
+chegar a versão do Codex. Abriu a sessão do estilo (sem anexos):
+`codex exec -s workspace-write "<base + cena>"`.
 
 ```
-[BASE] Scene: a small bonfire with a rusted straight sword thrust into its
-coiled ashes, embers drifting upward, ruined stone archway in the dark
-background, warm orange glow fading into deep charcoal shadows at the bottom.
-Melancholic, restful, "a safe place after a long fight".
+[BASE] Scene: a small bonfire with a rusted straight sword thrust into its coiled
+ashes, embers drifting upward, a ruined stone archway in the dark behind it with
+cracked, textured stones and hanging roots. Warm orange firelight casting soft
+volumetric glow on the stones, fading into deep charcoal shadows. Melancholic,
+restful, "a safe place after a long fight". A few drifting embers in the negative
+space below.
+
+Save the result as ref/bonfire_raw.png in the current directory.
 ```
+
+**Saída (13/10/2026):** o Codex gerou 941x1672 e ele mesmo já reduziu para a grade
+2x2 + 128 cores em `ref/bonfire_raw.png` (1080x1920). O original sem tratamento ficou
+em `ref/bonfire_raw_full.png`.
 
 ## end-of-day (diário): 📝
 
 ```
-[BASE, but: cozy 16-bit pixel art style instead of painterly]
+[BASE, cozier and warmer]
 Scene: a wooden farmhouse interior at night, a bed with a patchwork quilt,
 moonlight through a small window, a shipping crate by the door, fireflies
 outside. Bottom half: a large blank parchment-colored panel with a pixel
@@ -51,7 +77,7 @@ retro-futuristic console glow. Calm, contemplative, end-of-week log entry mood.
 [BASE] Scene: a lone wrought-iron park bench inside a vast underground cavern,
 soft blue bioluminescent glow, a small hanging lantern above the bench, pale
 stalactites and distant ruined architecture fading into blue-black mist,
-drifting light motes. Quiet, hand-painted, "rest here before going deeper".
+drifting light motes. Quiet, "rest here before going deeper".
 Same visual series as the bonfire image in this conversation.
 ```
 

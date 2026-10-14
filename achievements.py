@@ -27,8 +27,8 @@ def greater_than(recap, metric, value):
     return read_metric(recap, metric) > value
 
 
-def metric_greater_than_metric(recap, metric, other):
-    return read_metric(recap, metric) > read_metric(recap, other)
+def metric_greater_than_sum(recap, metric, others):
+    return read_metric(recap, metric) > sum(read_metric(recap, o) for o in others)
 
 
 def count_keys_at_least(recap, metric, value, ignore=()):
@@ -58,7 +58,7 @@ def hour_range(**hours):
 
 
 CHECKS = {f.__name__: f for f in (
-    at_least, greater_than, metric_greater_than_metric, count_keys_at_least,
+    at_least, greater_than, metric_greater_than_sum, count_keys_at_least,
     active_between_hours, session_starts_between_hours, quick_session, full_weekend,
 )}
 
