@@ -1,7 +1,7 @@
 ---
 name: bonfire
-description: Make a shareable "Strava for devs" card of the user's Claude Code usage (day or week) with pixel-art save-point themes and achievements. Use when the user runs /bonfire or asks for their Claude Code recap, weekly/daily stats card, or usage summary to post.
-argument-hint: "[day|week] [--theme THEME_ID] [--paths DIR ...]"
+description: Make a shareable "Strava for devs" card of the user's Claude Code usage (day, week, sprint, month or all time) with pixel-art save-point themes and achievements. Use when the user runs /bonfire or asks for their Claude Code recap, weekly/daily stats card, or usage summary to post.
+argument-hint: "[day|week|sprint|month|all] [--theme THEME_ID] [--paths DIR ...] [--alias NAME]"
 allowed-tools: Bash(python3:*), Read, AskUserQuestion
 ---
 
@@ -18,11 +18,23 @@ The scripts live in the repository root, two levels above this skill's directory
   content. All data comes from `recap.py`, which emits aggregates only.
 - Never put project names, paths, file names, prompts or code in the card, the caption
   or your replies. If the user asks for project names, explain they are hidden by design.
+- The only exception is `--alias`: a name the user typed themselves is shown on the card
+  instead of the project count. Never derive it from a path; if the user wants a name
+  shown, ask them to type it.
 
 ## Steps
 
-1. **Parse the arguments.** `day` → `--days 1`; `week` or nothing → `--days 7`.
-   Keep `--theme` and `--paths` if given (`--paths` takes real project directories).
+1. **Parse the arguments.** The period maps to `--days` and a default theme:
+
+   | Period | `--days` | Default theme |
+   |---|---|---|
+   | `day` | `1` | `end-of-day` |
+   | `week` (or nothing) | `7` | `bonfire` |
+   | `sprint` | `15` | `mdr-terminal` |
+   | `month` | `30` | `typewriter` |
+   | `all` | `all` | `typewriter` |
+
+   Keep `--theme`, `--paths` (real project directories) and `--alias` if given.
 
 2. **Collect.** Run, with a timestamped output in the scratchpad (or `/tmp`):
    ```sh
@@ -37,16 +49,16 @@ The scripts live in the repository root, two levels above this skill's directory
    the period, say so and stop.
 
 4. **Pick the theme.** If `--theme` was not given, ask with AskUserQuestion (max 4
-   options). Put the default first, marked "(Recommended)": `end-of-day` for a day,
-   `bonfire` for a week; fill the other 3 slots with different themes from
+   options). Put the period's default (table above) first, marked "(Recommended)";
+   fill the other 3 slots with different themes from
    `$ROOT/data/themes.json` (vary them between runs). In the question text, list
    every theme id so the user can type any other one via "Other".
 
 5. **Render.**
    ```sh
    mkdir -p ~/Pictures/bonfire
-   python3 "$ROOT/render.py" <tmp>/recap.json --theme THEME \
-     --out ~/Pictures/bonfire/<YYYY-MM-DD>-<day|week>-<THEME>.png
+   python3 "$ROOT/render.py" <tmp>/recap.json --theme THEME [--alias "NAME"] \
+     --out ~/Pictures/bonfire/<YYYY-MM-DD>-<PERIOD>-<THEME>.png
    ```
    Open the PNG with Read and check it before reporting (text inside the card, nothing
    cut off at the bottom). If it looks wrong, say so instead of reporting success.
@@ -54,7 +66,8 @@ The scripts live in the repository root, two levels above this skill's directory
 6. **Caption (optional).** Offer 2–3 short caption options for the post, written **only
    from the numbers in the JSON** and in the theme's voice (bonfire: weary knight
    resting; end-of-day: cozy farmer; captains-log: "Captain's log, stardate…";
-   bench: quiet explorer). No hashtags spam, no project names. Reply in the user's
+   bench: quiet explorer; for other themes, the voice of the game or series they
+   evoke, without naming the franchise). No hashtags spam, no project names. Reply in the user's
    language; the caption follows the language they ask for.
 
 7. **Report**: the PNG path, the achievements unlocked, and the captions.

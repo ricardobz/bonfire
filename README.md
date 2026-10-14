@@ -22,15 +22,21 @@ Instalar a skill uma vez (vale para qualquer projeto; abrir uma sessão nova dep
 ln -s ~/worktest/bonfire/skills/bonfire ~/.claude/skills/bonfire
 ```
 
-| Quando | Comando | Tema padrão |
-|---|---|---|
-| Fim do dia | `/bonfire day` | end-of-day |
-| Fim da semana | `/bonfire` ou `/bonfire week` | bonfire |
-| Pular a pergunta do tema | `/bonfire week --theme captains-log` | o escolhido |
-| Só alguns projetos | `/bonfire day --paths ~/worktest/floripa_game` | |
+| Quando | Comando | Período | Tema padrão |
+|---|---|---|---|
+| Fim do dia | `/bonfire day` | hoje | end-of-day |
+| Fim da semana | `/bonfire` ou `/bonfire week` | 7 dias | bonfire |
+| Fim da sprint | `/bonfire sprint` | 15 dias | mdr-terminal |
+| Fim do mês | `/bonfire month` | 30 dias | typewriter |
+| Tudo que existe | `/bonfire all` | desde o log mais antigo | typewriter |
+| Pular a pergunta do tema | `/bonfire week --theme captains-log` | | o escolhido |
+| Só alguns projetos | `/bonfire day --paths ~/worktest/floripa_game` | | |
+| Projeto com nome no card | `/bonfire all --paths ~/worktest/floripa_game --alias "Floripa Game"` | | |
 
 A skill mostra os números antes, pergunta o tema, salva o PNG em
-`~/Pictures/bonfire/<data>-<day|week>-<tema>.png` e oferece legendas para o post.
+`~/Pictures/bonfire/<data>-<período>-<tema>.png` e oferece legendas para o post.
+Por privacidade o card mostra só "N projects"; `--alias` troca isso por um nome que
+você digita (nunca vem do path).
 Temas: os ids em `data/themes.json`.
 
 - "Semana" = últimos 7 dias contando hoje: rodar sempre no mesmo dia (ex.: sexta)
@@ -39,14 +45,16 @@ Temas: os ids em `data/themes.json`.
 
   ```sh
   cd ~/worktest/bonfire
-  python3 recap.py --days 7 --out /tmp/recap.json
+  python3 recap.py --days 7 --out /tmp/recap.json   # 1, 7, 15, 30 ou all
   python3 render.py /tmp/recap.json --theme bonfire --out ~/Pictures/bonfire/week.png
   ```
 
-- O Claude Code apaga logs de sessão com mais de 30 dias (`cleanupPeriodDays` em
-  `~/.claude/settings.json`), então o histórico disponível é no máximo esse.
-- O card só tem layout para 1 e 7 dias; `--days 30` funciona no coletor, mas o card
-  (heatmap e título) ainda não suporta mês nem "tudo".
+  `render.py` aceita `--alias "Nome"`.
+
+- "Tudo" vai até onde os logs existem: o Claude Code limpa sessões antigas
+  (`cleanupPeriodDays` em `~/.claude/settings.json`). Em 14/10/2026 havia logs desde
+  26/08 (50 dias).
+- Acima de 7 dias o heatmap do card soma por dia da semana (seg a dom × 24 horas).
 
 ## Rodar localmente
 
@@ -66,7 +74,7 @@ python3 recap.py --days 7 --out recap_week.json
 python3 render.py recap_week.json --theme bonfire --out card.png
 ```
 
-Temas em `data/themes.json` (fundo, cor, título por dia/semana); layout em
+Temas em `data/themes.json` (fundo, cor, título por período); layout em
 `card/card.html` + `card/card.css`; fonte Pixelify Sans (OFL) em `assets/fonts/`.
 
 Skill: `skills/bonfire/SKILL.md` (ver "Uso" acima).

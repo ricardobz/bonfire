@@ -119,7 +119,7 @@ Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo
    (tudo que restar nos logs, `typewriter`); acima de 7 dias o heatmap soma por dia
    da semana. `--alias` mostra um nome digitado no lugar de "N projects".
    - [x] A. Coletor (`--days 15|30|all`, `period.kind`) + card (títulos, heatmap, alias)
-   - [ ] B. Skill (`/bonfire sprint|month|all`, `--alias`) + README
+   - [x] B. Skill (`/bonfire sprint|month|all`, `--alias`) + README
 
 ## Decisões em aberto
 
