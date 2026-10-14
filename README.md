@@ -5,6 +5,10 @@ A "Strava for devs": reads your local Claude Code usage, produces a summary with
 renders a PNG card over pixel-art backgrounds inspired by video game save points and
 TV series (bonfire, bench, typewriter, captain's log…) for posting.
 
+<p align="center">
+  <img src="docs/example-card.png" alt="Example card: bonfire theme, all-time recap of one project" width="360">
+</p>
+
 Status: **working, personal use** (16 themes). See [docs/PLAN.md](docs/PLAN.md) and
 [docs/ART-PROMPTS.md](docs/ART-PROMPTS.md).
 
