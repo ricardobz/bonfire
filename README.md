@@ -34,6 +34,15 @@ python3 render.py recap_week.json --theme bonfire --out card.png
 Temas em `data/themes.json` (fundo, cor, título por dia/semana); layout em
 `card/card.html` + `card/card.css`; fonte Pixelify Sans (OFL) em `assets/fonts/`.
 
+Skill `/bonfire` (coleta, preview, escolha do tema, PNG em `~/Pictures/bonfire/`):
+`skills/bonfire/SKILL.md`. Para usar em qualquer projeto, linkar uma vez:
+
+```sh
+ln -s ~/worktest/bonfire/skills/bonfire ~/.claude/skills/bonfire
+```
+
+Depois: `/bonfire`, `/bonfire day`, `/bonfire week --theme captains-log`.
+
 Achievements: regras em `data/achievements.json`, avaliadas por `achievements.py`
 e incluídas no JSON do recap.
 
