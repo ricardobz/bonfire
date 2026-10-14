@@ -109,7 +109,7 @@ Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo
 3. [x] **Card**: template HTML com temas (fundo + paleta + fonte) e PNG via
    headless Chrome. Verificar com screenshot.
 4. [x] **Skill `/bonfire`**: o wrapper, com preview e escolha de tema.
-5. [ ] **Fundos**: prompts em [PROMPTS-ARTE.md](PROMPTS-ARTE.md); Ricardo gera no
+5. [x] **Fundos**: prompts em [PROMPTS-ARTE.md](PROMPTS-ARTE.md); Ricardo gera no
    Codex, Claude integra.
 6. [ ] *(Depois)* Empacotar como plugin, escrever o README, talvez uma galeria
    estática no Netlify. Quando estiver no ar, adicionar no portfolio

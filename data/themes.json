@@ -22,5 +22,77 @@
     "accent": "#7fb8ff",
     "accent_soft": "#2f5f9e",
     "title": {"day": "Day explored, progress saved", "week": "Week explored, progress saved"}
+  },
+  "site-of-grace": {
+    "background": "assets/backgrounds/site-of-grace.png",
+    "accent": "#f5c95a",
+    "accent_soft": "#8a6d2a",
+    "title": {"day": "Grace found, day complete", "week": "Grace found, week complete"}
+  },
+  "typewriter": {
+    "background": "assets/backgrounds/typewriter.png",
+    "accent": "#8fd18a",
+    "accent_soft": "#3e6b3a",
+    "title": {"day": "Progress typed and saved", "week": "Progress typed and saved"}
+  },
+  "mountain-campfire": {
+    "background": "assets/backgrounds/mountain-campfire.png",
+    "accent": "#ff8fb8",
+    "accent_soft": "#6a4fb0",
+    "title": {"day": "Summit of the day reached", "week": "Summit of the week reached"}
+  },
+  "save-star": {
+    "background": "assets/backgrounds/save-star.png",
+    "accent": "#ffe066",
+    "accent_soft": "#6b3fa0",
+    "title": {"day": "Filled with determination", "week": "Filled with determination"}
+  },
+  "save-crystal": {
+    "background": "assets/backgrounds/save-crystal.png",
+    "accent": "#7fd4ff",
+    "accent_soft": "#2f5f9e",
+    "title": {"day": "Day's journey crystallized", "week": "Week's journey crystallized"}
+  },
+  "sculptors-idol": {
+    "background": "assets/backgrounds/sculptors-idol.png",
+    "accent": "#e0503c",
+    "accent_soft": "#7a2a1e",
+    "title": {"day": "Rest, then rise again", "week": "Rest, then rise again"}
+  },
+  "healing-center": {
+    "background": "assets/backgrounds/healing-center.png",
+    "accent": "#ff9ec4",
+    "accent_soft": "#8a4a64",
+    "title": {"day": "Your team is fully healed", "week": "Your team is fully healed"}
+  },
+  "mdr-terminal": {
+    "background": "assets/backgrounds/mdr-terminal.png",
+    "accent": "#6fe0c8",
+    "accent_soft": "#2f6b5a",
+    "title": {"day": "Day's file refined, 100%", "week": "Week's file refined, 100%"}
+  },
+  "awards-night": {
+    "background": "assets/backgrounds/awards-night.png",
+    "accent": "#f2c94c",
+    "accent_soft": "#8a6a1e",
+    "title": {"day": "And the award goes to… you", "week": "And the award goes to… you"}
+  },
+  "dnd-table": {
+    "background": "assets/backgrounds/dnd-table.png",
+    "accent": "#ff5a4f",
+    "accent_soft": "#7a2a24",
+    "title": {"day": "Campaign session complete", "week": "Campaign session complete"}
+  },
+  "fsociety-terminal": {
+    "background": "assets/backgrounds/fsociety-terminal.png",
+    "accent": "#4fe36b",
+    "accent_soft": "#1e6b2e",
+    "title": {"day": "Day's exploit executed", "week": "Week's exploit executed"}
+  },
+  "ticket-rail": {
+    "background": "assets/backgrounds/ticket-rail.png",
+    "accent": "#ff9f4a",
+    "accent_soft": "#3a6ea5",
+    "title": {"day": "All tickets out, yes chef", "week": "All tickets out, yes chef"}
   }
 }

@@ -1,7 +1,7 @@
 ---
 name: bonfire
 description: Make a shareable "Strava for devs" card of the user's Claude Code usage (day or week) with pixel-art save-point themes and achievements. Use when the user runs /bonfire or asks for their Claude Code recap, weekly/daily stats card, or usage summary to post.
-argument-hint: "[day|week] [--theme bonfire|end-of-day|captains-log|bench] [--paths DIR ...]"
+argument-hint: "[day|week] [--theme THEME_ID] [--paths DIR ...]"
 allowed-tools: Bash(python3:*), Read, AskUserQuestion
 ---
 
@@ -36,9 +36,11 @@ The scripts live in the repository root, two levels above this skill's directory
    JSON has numbers only and offer to show it in full. If there were no sessions in
    the period, say so and stop.
 
-4. **Pick the theme.** If `--theme` was not given, ask with AskUserQuestion. Options
-   come from `$ROOT/data/themes.json`; put the default first, marked "(Recommended)":
-   `end-of-day` for a day, `bonfire` for a week.
+4. **Pick the theme.** If `--theme` was not given, ask with AskUserQuestion (max 4
+   options). Put the default first, marked "(Recommended)": `end-of-day` for a day,
+   `bonfire` for a week; fill the other 3 slots with different themes from
+   `$ROOT/data/themes.json` (vary them between runs). In the question text, list
+   every theme id so the user can type any other one via "Other".
 
 5. **Render.**
    ```sh
