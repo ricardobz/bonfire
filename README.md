@@ -15,7 +15,13 @@ script + fundos); uma galeria estática no Netlify é opcional, para depois.
 
 ## Rodar localmente
 
-A definir (passo 1 do plano): `python3 recap.py --days 7`.
+Só Python 3 (stdlib). O coletor imprime o JSON agregado:
+
+```sh
+python3 recap.py --days 7                       # semana, todas as pastas
+python3 recap.py --days 1 --paths ~/worktest/x  # hoje, só essas pastas
+python3 -m unittest discover tests              # inclui o teste de vazamento
+```
 
 ## Deploy
 

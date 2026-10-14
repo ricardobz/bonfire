@@ -103,7 +103,7 @@ Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo
 
 ## Passos (um commit cada)
 
-1. [ ] **Coletor**: `recap.py --days 1|7 --paths ...` gera o JSON agregado, mais
+1. [x] **Coletor**: `recap.py --days 1|7 --paths ...` gera o JSON agregado, mais
    um teste de que nenhum texto de conversa vaza.
 2. [ ] **Achievements**: regras num arquivo de dados, fácil de estender.
 3. [ ] **Card**: template HTML com temas (fundo + paleta + fonte) e PNG via
@@ -117,8 +117,8 @@ Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo
 
 ## Decisões em aberto
 
-- Por onde começar: diário (End of day) ou semanal (Bonfire / Captain's Log)?
-- Quais temas na primeira leva (sugestão: 4 a 6).
+- ~~Por onde começar~~: **semanal** primeiro (2026-10-13).
+- ~~Primeira leva de temas~~: `bonfire`, `end-of-day`, `captains-log`, `bench`.
 - Só uso pessoal ou plugin para outros devs desde já? Isso muda o cuidado com a
   privacidade e com os paths.
 - O nome `bonfire` foi escolhido; `savepoint` foi a alternativa mais universal.

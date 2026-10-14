@@ -45,9 +45,19 @@ violet, a captain's chair silhouette in the foreground at the edge, faint
 retro-futuristic console glow. Calm, contemplative, end-of-week log entry mood.
 ```
 
+## bench: 📝
+
+```
+[BASE] Scene: a lone wrought-iron park bench inside a vast underground cavern,
+soft blue bioluminescent glow, a small hanging lantern above the bench, pale
+stalactites and distant ruined architecture fading into blue-black mist,
+drifting light motes. Quiet, hand-painted, "rest here before going deeper".
+Same visual series as the bonfire image in this conversation.
+```
+
 ## Pendentes: ⬜
 
-Escrever os prompts depois de escolher os temas da primeira leva:
-`site-of-grace`, `bench`, `typewriter`, `mountain-campfire`, `save-star`,
+Fora da primeira leva (bonfire, end-of-day, captains-log, bench):
+`site-of-grace`, `typewriter`, `mountain-campfire`, `save-star`,
 `save-crystal`, `sculptors-idol`, `healing-center`, `mdr-terminal`,
 `awards-night`, `dnd-table`, `fsociety-terminal`, `ticket-rail`.
