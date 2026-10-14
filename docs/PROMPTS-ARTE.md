@@ -54,7 +54,7 @@ Save the result as ref/bonfire_raw.png in the current directory.
 em `ref/bonfire_raw_full.png`; o fundo final sai dele via `tools/pixelize.py`.
 Aprovado e integrado em `assets/backgrounds/bonfire.png`.
 
-## end-of-day (diário): 📝
+## end-of-day (diário): ✅
 
 O painel de pergaminho do resumo fica para o card desenhar (passo 3), não para a
 arte: o fundo mantém o mesmo espaço negativo escuro dos outros.
@@ -77,7 +77,11 @@ Save the generated image, unmodified, as ref/end-of-day_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-## captains-log: 📝
+**Saída (13/10/2026):** `ref/end-of-day_raw_full.png`, 941x1672 sem tratamento (o gerador
+ignora o 1080x1920 pedido). Aprovado e integrado em
+`assets/backgrounds/end-of-day.png` via `tools/pixelize.py`.
+
+## captains-log: ✅
 
 Continuar a sessão do estilo, anexando o bonfire:
 `codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
@@ -96,7 +100,11 @@ Save the generated image, unmodified, as ref/captains-log_raw_full.png in the
 current directory. Do not resize or post-process it.
 ```
 
-## bench: 📝
+**Saída (13/10/2026):** `ref/captains-log_raw_full.png`, 941x1672 sem tratamento (o gerador
+ignora o 1080x1920 pedido). Aprovado e integrado em
+`assets/backgrounds/captains-log.png` via `tools/pixelize.py`.
+
+## bench: ✅
 
 Continuar a sessão do estilo, anexando o bonfire:
 `codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + cena>"`.
@@ -114,6 +122,10 @@ cavern mist fading to near-black.
 Save the generated image, unmodified, as ref/bench_raw_full.png in the current
 directory. Do not resize or post-process it.
 ```
+
+**Saída (13/10/2026):** `ref/bench_raw_full.png`, 941x1672 sem tratamento (o gerador
+ignora o 1080x1920 pedido). Aprovado e integrado em
+`assets/backgrounds/bench.png` via `tools/pixelize.py`.
 
 ## Pendentes: ⬜
 
