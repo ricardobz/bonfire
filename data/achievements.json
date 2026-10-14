@@ -1,0 +1,72 @@
+[
+  {
+    "id": "night-owl",
+    "name": "Night Owl",
+    "description": "Coded between 2am and 5am",
+    "check": "active_between_hours",
+    "params": {"from": 2, "to": 5}
+  },
+  {
+    "id": "early-bird",
+    "name": "Early Bird",
+    "description": "Started a session before 6am",
+    "check": "session_starts_between_hours",
+    "params": {"from": 5, "to": 6}
+  },
+  {
+    "id": "marathon",
+    "name": "Marathon",
+    "description": "A session with over 4 hours of active time",
+    "check": "greater_than",
+    "params": {"metric": "longest_session_minutes", "value": 240}
+  },
+  {
+    "id": "speedrun",
+    "name": "Speedrun",
+    "description": "Shipped an edit in a session under 10 minutes",
+    "check": "quick_session",
+    "params": {"max_active_minutes": 9, "min_edits": 1}
+  },
+  {
+    "id": "streak-7",
+    "name": "Streak 7",
+    "description": "7 days in a row",
+    "check": "at_least",
+    "params": {"metric": "streak_days", "value": 7}
+  },
+  {
+    "id": "polyglot",
+    "name": "Polyglot",
+    "description": "Touched 5 or more languages",
+    "check": "count_keys_at_least",
+    "params": {"metric": "languages", "value": 5, "ignore": ["Other"]}
+  },
+  {
+    "id": "delegator",
+    "name": "Delegator",
+    "description": "Dispatched 10 or more subagents",
+    "check": "at_least",
+    "params": {"metric": "subagents", "value": 10}
+  },
+  {
+    "id": "cache-lord",
+    "name": "Cache Lord",
+    "description": "Cache hit rate above 90%",
+    "check": "greater_than",
+    "params": {"metric": "cache_hit_rate", "value": 0.9}
+  },
+  {
+    "id": "weekend-warrior",
+    "name": "Weekend Warrior",
+    "description": "Coded on both Saturday and Sunday",
+    "check": "full_weekend",
+    "params": {}
+  },
+  {
+    "id": "read-the-manual",
+    "name": "Read the Manual",
+    "description": "More reads than edits",
+    "check": "metric_greater_than_metric",
+    "params": {"metric": "tools.Read", "other": "tools.Edit"}
+  }
+]

@@ -11,7 +11,7 @@ processado à mão.
 ## Base comum (prefixo de todos)
 
 ```
-Background art for a shareable stats card, 1080x1350 portrait.
+Background art for a shareable stats card, 1080x1920 vertical (9:16 phone format).
 Painterly digital illustration, moody cinematic lighting, slightly desaturated,
 subtle film grain. Leave the CENTER and LOWER 55% as calm, low-detail negative
 space (dark gradient, soft fog) so white text and numbers can be overlaid

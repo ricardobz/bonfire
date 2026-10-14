@@ -23,6 +23,9 @@ python3 recap.py --days 1 --paths ~/worktest/x  # hoje, só essas pastas
 python3 -m unittest discover tests              # inclui o teste de vazamento
 ```
 
+Achievements: regras em `data/achievements.json`, avaliadas por `achievements.py`
+e incluídas no JSON do recap.
+
 ## Deploy
 
 A definir.

@@ -95,8 +95,8 @@ nome de franquia na imagem. Os nomes dos temas no código são genéricos (`bonf
 
 ### Formatos de imagem
 
-- 1080x1350 (retrato: Instagram/LinkedIn), formato base
-- 1080x1920 (stories), opcional
+- 1080x1920 (9:16, celular/stories), formato base (2026-10-13)
+- 1080x1350 (retrato: Instagram/LinkedIn), opcional
 - 1200x675 (X/Twitter), opcional
 
 Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo).
@@ -105,7 +105,7 @@ Todo fundo precisa de **espaço negativo** para o texto (centro e parte de baixo
 
 1. [x] **Coletor**: `recap.py --days 1|7 --paths ...` gera o JSON agregado, mais
    um teste de que nenhum texto de conversa vaza.
-2. [ ] **Achievements**: regras num arquivo de dados, fácil de estender.
+2. [x] **Achievements**: regras num arquivo de dados, fácil de estender.
 3. [ ] **Card**: template HTML com temas (fundo + paleta + fonte) e PNG via
    headless Chrome. Verificar com screenshot.
 4. [ ] **Skill `/bonfire`**: o wrapper, com preview e escolha de tema.

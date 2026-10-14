@@ -12,6 +12,8 @@ Uso:
 
 import argparse
 import json
+
+import achievements
 import re
 import sys
 from collections import Counter
@@ -92,6 +94,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
 
     all_days = set()
     session_times = {}
+    session_edits = Counter()
     projects = set()
     tokens = Counter()
     tools = Counter()
@@ -148,6 +151,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
             tools[tool_label(name)] += 1
             if name in SUBAGENT_TOOLS:
                 subagents += 1
+            if name in FILE_TOOLS:
+                session_edits[entry.get("sessionId")] += 1
             tool_input = block.get("input") or {}
             file_path = tool_input.get("file_path") or tool_input.get("notebook_path")
             if name in FILE_TOOLS and isinstance(file_path, str):
@@ -156,13 +161,14 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
                     languages[LANGUAGES.get(Path(file_path).suffix.lower(), "Other")] += 1
 
     sessions = []
-    for times in session_times.values():
+    for session_id, times in session_times.items():
         times.sort()
         sessions.append({
             "start": times[0].isoformat(timespec="minutes"),
             "end": times[-1].isoformat(timespec="minutes"),
             "active_minutes": active_minutes(times, idle_gap),
             "wall_minutes": round((times[-1] - times[0]).total_seconds() / 60),
+            "edits": session_edits[session_id],
         })
     sessions.sort(key=lambda s: s["start"])
 
@@ -170,7 +176,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
     prompt_total = tokens["input_tokens"] + cache_read + tokens["cache_creation_input_tokens"]
     active_days = sorted(d for d in all_days if start.date() <= d <= now.date())
 
-    return {
+    recap = {
         "version": 1,
         "period": {
             "days": days,
@@ -201,6 +207,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
                     for d, h in sorted(heatmap.items())],
         "session_list": sessions,
     }
+    recap["achievements"] = achievements.evaluate(recap)
+    return recap
 
 
 def main(argv=None):
