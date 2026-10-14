@@ -23,6 +23,17 @@ python3 recap.py --days 1 --paths ~/worktest/x  # hoje, só essas pastas
 python3 -m unittest discover tests              # inclui o teste de vazamento
 ```
 
+Card PNG (1080x1920, precisa do Google Chrome ou Chromium; `BONFIRE_CHROME` aponta
+outro binário):
+
+```sh
+python3 recap.py --days 7 --out recap_week.json
+python3 render.py recap_week.json --theme bonfire --out card.png
+```
+
+Temas em `data/themes.json` (fundo, cor, título por dia/semana); layout em
+`card/card.html` + `card/card.css`; fonte Pixelify Sans (OFL) em `assets/fonts/`.
+
 Achievements: regras em `data/achievements.json`, avaliadas por `achievements.py`
 e incluídas no JSON do recap.
 

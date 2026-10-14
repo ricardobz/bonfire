@@ -1,0 +1,26 @@
+{
+  "bonfire": {
+    "background": "assets/backgrounds/bonfire.png",
+    "accent": "#ff9a3c",
+    "accent_soft": "#c2531c",
+    "title": {"day": "Quests of the day cleared", "week": "Quests of the week cleared"}
+  },
+  "end-of-day": {
+    "background": "assets/backgrounds/end-of-day.png",
+    "accent": "#f2c46d",
+    "accent_soft": "#8a6a3a",
+    "title": {"day": "Today's harvest is in", "week": "This week's harvest is in"}
+  },
+  "captains-log": {
+    "background": "assets/backgrounds/captains-log.png",
+    "accent": "#4fe3d6",
+    "accent_soft": "#7b4fd0",
+    "title": {"day": "Missions of the day logged", "week": "Missions of the week logged"}
+  },
+  "bench": {
+    "background": "assets/backgrounds/bench.png",
+    "accent": "#7fb8ff",
+    "accent_soft": "#2f5f9e",
+    "title": {"day": "Day explored, progress saved", "week": "Week explored, progress saved"}
+  }
+}
