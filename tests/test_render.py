@@ -69,6 +69,19 @@ class RenderTest(unittest.TestCase):
         self.assertIn("Floripa &lt;Game&gt;", html)
         self.assertNotIn("1 project", html)
 
+    def test_ranked_lines_in_percent(self):
+        # Shares of all 7 calls, not only of the top 3.
+        self.assertIn("Bash 43% · Read 29% · Write 14%",
+                      render.ranked_line("tools", recap()["tools"]))
+        self.assertIn("Go &lt;1%", render.ranked_line("langs", {"Python": 300, "Go": 1}))
+        self.assertEqual(render.ranked_line("langs", {}), "")
+
+    def test_languages_prefer_project_files(self):
+        html = render.build_html(recap(project_languages={"JavaScript": 3, "Python": 1}),
+                                 "bonfire")
+        self.assertIn("JavaScript 75% · Python 25%", html)
+        self.assertIn("Python 100%", render.build_html(recap(project_languages={}), "bonfire"))
+
     def test_text_is_escaped(self):
         html = render.build_html(recap(tools={"<script>": 1}), "bonfire")
         self.assertNotIn("<script>", html)

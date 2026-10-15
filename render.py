@@ -100,10 +100,18 @@ def heatmap_html(recap):
     return "".join(rows)
 
 
+def percent(count, total):
+    share = round(100 * count / total)
+    return f"{share}%" if share else "<1%"
+
+
 def ranked_line(label, items, limit=3):
-    if not items:
+    """Top items as a share of the whole, e.g. 'Bash 66% · Read 26%'."""
+    total = sum(items.values()) if items else 0
+    if not total:
         return ""
-    top = " · ".join(f"{escape(name)} {count}" for name, count in list(items.items())[:limit])
+    top = " · ".join(f"{escape(name)} {escape(percent(count, total))}"
+                     for name, count in list(items.items())[:limit])
     return f'<span class="label">{label}</span> {top}'
 
 
@@ -128,7 +136,8 @@ def build_html(recap, theme_id, themes=None, alias=None):
         stats=stats_html(recap),
         heatmap=heatmap_html(recap),
         tools=ranked_line("tools", recap["tools"]),
-        languages=ranked_line("langs", recap["languages"]),
+        # Project files only; older JSON without the field falls back to every file.
+        languages=ranked_line("langs", recap.get("project_languages") or recap["languages"]),
         badges=badges_html(recap),
     )
 
