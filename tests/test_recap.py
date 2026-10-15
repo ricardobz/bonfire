@@ -65,7 +65,9 @@ def fixture_lines():
                            "content": "CANARY output"}]),
         # Long pause: 10:06 -> 11:00 doesn't count as active time.
         user(t("11:00"), "CANARY again"),
-        assistant(t("11:04"), "m3", [tool("t7", "Edit", file_path="/x/CANARY.py")]),
+        assistant(t("11:04"), "m3", [tool("t7", "Edit", file_path="/x/CANARY.py"),
+                                     tool("t8", "Write",
+                                          file_path=SECRET_PROJECT + "/CANARY.html")]),
         # Outside the 1-day window, but counts for the streak.
         user("2026-10-12T09:00:00Z", "CANARY yesterday"),
     ]
@@ -113,11 +115,14 @@ class RecapTest(unittest.TestCase):
         self.assertEqual(data["active_days"], 1)
         self.assertEqual(data["tokens"]["output"], 20 * 4)  # m1, m2, m3, s1
         self.assertEqual(data["cache_hit_rate"], 0.959)  # 940 / (10 + 30 + 940)
-        self.assertEqual(data["tools"], {"Edit": 2, "Write": 1, "Read": 1, "Bash": 1,
+        self.assertEqual(data["tools"], {"Edit": 2, "Write": 2, "Read": 1, "Bash": 1,
                                          "MCP": 1, "Agent": 1, "Grep": 1})
         self.assertEqual(data["subagents"], 1)
-        self.assertEqual(data["files_touched"], 2)
-        self.assertEqual(data["languages"], {"Python": 1, "JavaScript": 1})
+        self.assertEqual(data["files_touched"], 3)
+        self.assertEqual(data["languages"], {"Python": 1, "JavaScript": 1, "HTML": 1})
+        # /x/ is outside the cwd (like a scratchpad); only the HTML file is in the project.
+        self.assertEqual(data["project_files_touched"], 1)
+        self.assertEqual(data["project_languages"], {"HTML": 1})
         self.assertEqual(data["models"], {"claude-opus-5-5": 4})
 
     def test_period_kinds(self):

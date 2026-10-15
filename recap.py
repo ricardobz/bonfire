@@ -106,8 +106,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
     hours = Counter()
     heatmap = {}
     seen_messages, seen_tools = set(), set()
-    files_touched = set()
-    languages = Counter()
+    files_touched, project_files = set(), set()
+    languages, project_languages = Counter(), Counter()
     subagents = 0
 
     for project_dir, sidechain, entry in iter_entries(project_dirs):
@@ -160,9 +160,16 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
             tool_input = block.get("input") or {}
             file_path = tool_input.get("file_path") or tool_input.get("notebook_path")
             if name in FILE_TOOLS and isinstance(file_path, str):
+                language = LANGUAGES.get(Path(file_path).suffix.lower(), "Other")
                 if file_path not in files_touched:
                     files_touched.add(file_path)
-                    languages[LANGUAGES.get(Path(file_path).suffix.lower(), "Other")] += 1
+                    languages[language] += 1
+                # Project-only view: skips scratchpad, /tmp and other files outside the cwd.
+                cwd = entry.get("cwd")
+                if (file_path not in project_files and isinstance(cwd, str)
+                        and Path(file_path).is_relative_to(cwd)):
+                    project_files.add(file_path)
+                    project_languages[language] += 1
 
     if start is None:
         first_day = min(all_days, default=now.date())
@@ -213,6 +220,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
         "subagents": subagents,
         "files_touched": len(files_touched),
         "languages": dict(languages.most_common()),
+        "project_files_touched": len(project_files),
+        "project_languages": dict(project_languages.most_common()),
         "models": dict(models.most_common()),
         "peak_hour": hours.most_common(1)[0][0] if hours else None,
         "heatmap": [{"date": d.isoformat(), "weekday": d.strftime("%a"), "hours": h}
