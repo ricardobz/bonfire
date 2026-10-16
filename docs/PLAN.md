@@ -66,6 +66,9 @@ is shown before rendering.
 | Unfinished Business | a session resumed on another day (12h+ wall time) |
 | Surgeon | Edit at least 3× Write |
 | Token Tycoon | 1M+ output tokens |
+| S.P.E.C.I.A.L. | 7+ different tools |
+| Lone Wanderer | 6+ projects |
+| War Never Changes | active every day of a 7+ day period |
 
 ## Background themes
 
@@ -83,6 +86,8 @@ is shown before rendering.
 | 8 | Save crystal | Final Fantasy | |
 | 9 | Sculptor's idol | Sekiro | |
 | 10 | Healing center / PC | Pokémon ("progress saved") | |
+| 11 | Overseer terminal | Fallout (vault office, amber CRT) | |
+| 12 | Wasteland | Fallout (barrel fire in the ruins) | |
 
 ### Series
 

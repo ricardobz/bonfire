@@ -174,5 +174,29 @@
       "day": "All tickets out, yes chef",
       "week": "All tickets out, yes chef"
     }
+  },
+  "overseer-terminal": {
+    "background": "assets/backgrounds/overseer-terminal.png",
+    "accent": "#ffb642",
+    "accent_soft": "#8a5a14",
+    "title": {
+      "day": "Daily Overseer report: all systems nominal",
+      "week": "Weekly Overseer report: productivity approved",
+      "sprint": "Sprint directive complete",
+      "month": "Monthly vault audit passed",
+      "all": "Vault log: since the doors sealed"
+    }
+  },
+  "wasteland": {
+    "background": "assets/backgrounds/wasteland.png",
+    "accent": "#ff8c3a",
+    "accent_soft": "#7a3e1a",
+    "title": {
+      "day": "Survived another day in the Wasteland",
+      "week": "Week's quests logged",
+      "sprint": "Sprint's caravan arrived",
+      "month": "A month of scavenging",
+      "all": "War never changes. Neither does shipping."
+    }
   }
 }

@@ -398,3 +398,53 @@ current directory. Do not resize or post-process it.
 
 **Output (2026-10-14):** `ref/ticket-rail_raw_full.png`, untouched 941x1672. Approved and integrated as
 `assets/backgrounds/ticket-rail.png` via `tools/pixelize.py`.
+
+## overseer-terminal: ✅
+
+Reference: Fallout: the Overseer's office. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
+
+```
+[BASE] The attached image is a STYLE reference only: match its pixel size, level of
+detail, shading and lighting approach. Do NOT copy its content or its orange palette.
+
+Scene: an underground bunker office in 1950s retro-futuristic style: a heavy steel
+desk with a chunky monochrome CRT terminal glowing amber, a coffee mug and a desk
+fan beside it, riveted metal walls with pipes and pressure gauges, and through a
+round porthole window behind the desk a colossal cog-shaped steel vault door.
+A dim yellow warning light. Amber screen glow against cold steel blue-grey.
+Orderly, slightly ominous, "all systems nominal". No text on the screen, no
+numbers, no emblems. The negative space below is the dark steel floor fading to
+near-black.
+
+Save the generated image, unmodified, as ref/overseer-terminal_raw_full.png in the
+current directory. Do not resize or post-process it.
+```
+
+**Output (2026-10-15):** `ref/overseer-terminal_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/overseer-terminal.png` via `tools/pixelize.py`.
+
+## wasteland: ✅
+
+Reference: Fallout: a campfire in the Wasteland. Continue the style session, attaching bonfire:
+`codex exec resume 01a137f3-90b7-7302-a6a6-85a9d4e98daa -i assets/backgrounds/bonfire.png "<base + scene>"`.
+
+```
+[BASE] The attached image is a STYLE reference only: match its pixel size, level of
+detail, shading and lighting approach. Do NOT copy its content or its orange palette.
+
+Scene: a post-apocalyptic desert at dusk: a small fire burning inside a rusty
+oil barrel, a bedroll and a scavenged backpack beside it, the rusted shell of a
+rounded 1950s car, a broken highway overpass and a blank faded billboard behind,
+a ruined city skyline on the horizon under a hazy sky of sickly green fading to
+orange. Rust, dust orange and faint radioactive green palette. Lonely but
+resilient, "survived another day". No text on the billboard, no emblems. The
+negative space below is dark cracked desert ground and dust haze fading to
+near-black.
+
+Save the generated image, unmodified, as ref/wasteland_raw_full.png in the
+current directory. Do not resize or post-process it.
+```
+
+**Output (2026-10-15):** `ref/wasteland_raw_full.png`, untouched 941x1672. Approved and integrated as
+`assets/backgrounds/wasteland.png` via `tools/pixelize.py`.

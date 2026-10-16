@@ -110,5 +110,26 @@
     "description": "1M or more output tokens",
     "check": "at_least",
     "params": {"metric": "tokens.output", "value": 1000000}
+  },
+  {
+    "id": "special",
+    "name": "S.P.E.C.I.A.L.",
+    "description": "Used 7 or more different tools",
+    "check": "count_keys_at_least",
+    "params": {"metric": "tools", "value": 7}
+  },
+  {
+    "id": "lone-wanderer",
+    "name": "Lone Wanderer",
+    "description": "Roamed 6 or more projects",
+    "check": "at_least",
+    "params": {"metric": "projects", "value": 6}
+  },
+  {
+    "id": "war-never-changes",
+    "name": "War Never Changes",
+    "description": "Showed up every day of a 7+ day period",
+    "check": "active_every_day",
+    "params": {"min_days": 7}
   }
 ]

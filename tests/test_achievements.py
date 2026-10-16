@@ -26,6 +26,7 @@ def base_recap(**overrides):
         "languages": {"Python": 1},
         "heatmap": [day("2026-10-08", 20)],  # Thursday
         "session_list": [session("2026-10-08T20:00-03:00")],
+        "period": {"days": 7}, "active_days": 1, "projects": 1,
     }
     recap.update(overrides)
     return recap
@@ -65,6 +66,10 @@ class AchievementsTest(unittest.TestCase):
                 "2026-10-08T20:00-03:00", end="2026-10-09T21:00-03:00", wall_minutes=1500)]},
             "surgeon": {"tools": {"Read": 1, "Edit": 9, "Write": 3}},
             "token-tycoon": {"tokens": {"output": 1_000_000}},
+            "special": {"tools": dict.fromkeys(["Read", "Edit", "Write", "Bash", "Grep",
+                                                "Glob", "Agent"], 1)},
+            "lone-wanderer": {"projects": 6},
+            "war-never-changes": {"active_days": 7},
         }
         self.assertEqual(set(cases), {r["id"] for r in achievements.load_rules()})
         for achievement_id, overrides in cases.items():
@@ -76,6 +81,8 @@ class AchievementsTest(unittest.TestCase):
         self.assertEqual(unlocked(base_recap(session_list=[session("2026-10-08T20:00-03:00", 0)])), set())
         # A Sunday plus the following Saturday is not a full weekend.
         self.assertEqual(unlocked(base_recap(heatmap=[day("2026-10-04", 9), day("2026-10-10", 9)])), set())
+        # A one-day card is always "every day"; War Never Changes needs a 7+ day period.
+        self.assertEqual(unlocked(base_recap(period={"days": 1})), set())
         # 'Other' doesn't count as a language.
         langs = dict.fromkeys(["Python", "JavaScript", "HTML", "CSS", "Other"], 1)
         self.assertEqual(unlocked(base_recap(languages=langs)), set())

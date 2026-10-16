@@ -77,6 +77,11 @@ def full_weekend(recap):
     return any(d.weekday() == 5 and d + timedelta(days=1) in active for d in active)
 
 
+def active_every_day(recap, min_days):
+    days = recap["period"]["days"]
+    return days >= min_days and recap["active_days"] >= days
+
+
 def hour_range(**hours):
     return range(hours["from"], hours["to"])
 
@@ -85,6 +90,7 @@ CHECKS = {f.__name__: f for f in (
     at_least, greater_than, metric_greater_than_sum, metric_at_least_times, count_keys_at_least,
     active_between_hours, only_active_on_weekdays_between_hours, session_starts_between_hours,
     sessions_on_one_day_at_least, resumed_on_another_day, quick_session, full_weekend,
+    active_every_day,
 )}
 
 
