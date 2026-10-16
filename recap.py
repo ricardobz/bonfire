@@ -20,6 +20,9 @@ from collections import Counter
 from datetime import datetime, time, timedelta
 from pathlib import Path
 
+if sys.version_info < (3, 7):
+    sys.exit("bonfire needs Python 3.7+")
+
 DEFAULT_ROOT = Path.home() / ".claude" / "projects"
 SUBAGENT_TOOLS = {"Task", "Agent"}
 FILE_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
@@ -42,9 +45,12 @@ def encode_project_path(path):
 
 
 def parse_ts(value):
+    # Only bad timestamps become None; anything else (e.g. Python < 3.7) must fail loudly.
+    if not isinstance(value, str):
+        return None
     try:
         return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone()
-    except (AttributeError, ValueError):
+    except ValueError:
         return None
 
 

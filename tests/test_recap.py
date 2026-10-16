@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import recap  # noqa: E402
@@ -149,6 +150,19 @@ class RecapTest(unittest.TestCase):
     def test_paths_filter(self):
         self.assertEqual(json.loads(self.run_cli("--paths", SECRET_PROJECT))["sessions"], 1)
         self.assertEqual(json.loads(self.run_cli("--paths", "/other"))["sessions"], 0)
+
+
+class ParseTsTest(unittest.TestCase):
+    def test_bad_timestamps_are_skipped(self):
+        for value in (None, 123, "", "not a date"):
+            with self.subTest(value=value):
+                self.assertIsNone(recap.parse_ts(value))
+
+    def test_missing_fromisoformat_is_not_swallowed(self):
+        # Python 3.6 has no fromisoformat: that must crash, not yield an empty card.
+        with mock.patch.object(recap, "datetime", mock.Mock(spec=[])):
+            with self.assertRaises(AttributeError):
+                recap.parse_ts(NOW)
 
 
 if __name__ == "__main__":

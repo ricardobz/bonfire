@@ -20,10 +20,11 @@ more distinctive name first. The `ricardobz/bonfire` repository on GitHub is pub
 
 ## Usage
 
-Install the skill once (works in any project; open a new session afterwards):
+Install the skill once (works in any project; open a new session afterwards).
+From the folder where you cloned this repo:
 
 ```sh
-ln -s ~/worktest/bonfire/skills/bonfire ~/.claude/skills/bonfire
+ln -s "$(pwd)/skills/bonfire" ~/.claude/skills/bonfire
 ```
 
 | When | Command | Period | Default theme |
@@ -34,8 +35,8 @@ ln -s ~/worktest/bonfire/skills/bonfire ~/.claude/skills/bonfire
 | End of the month | `/bonfire month` | 30 days | typewriter |
 | Everything there is | `/bonfire all` | since the oldest log | typewriter |
 | Skip the theme question | `/bonfire week --theme captains-log` | | the one you pick |
-| Only some projects | `/bonfire day --paths ~/worktest/floripa_game` | | |
-| Project name on the card | `/bonfire all --paths ~/worktest/floripa_game --alias "Floripa Game"` | | |
+| Only some projects | `/bonfire day --paths ~/code/my-app` | | |
+| Project name on the card | `/bonfire all --paths ~/code/my-app --alias "My App"` | | |
 
 The skill shows the numbers first, asks for the theme, saves the PNG to
 `~/Pictures/bonfire/<date>-<period>-<theme>.png` and suggests captions for the post.
@@ -48,7 +49,7 @@ Themes: the ids in `data/themes.json`.
 - Without Claude (no preview or captions, no tokens spent):
 
   ```sh
-  cd ~/worktest/bonfire
+  cd path/to/bonfire
   python3 recap.py --days 7 --out /tmp/recap.json   # 1, 7, 15, 30 or all
   python3 render.py /tmp/recap.json --theme bonfire --out ~/Pictures/bonfire/week.png
   ```
@@ -66,7 +67,7 @@ Python 3 only (stdlib). The collector prints the aggregated JSON:
 
 ```sh
 python3 recap.py --days 7                       # week, all folders
-python3 recap.py --days 1 --paths ~/worktest/x  # today, only these folders
+python3 recap.py --days 1 --paths ~/code/x      # today, only these folders
 python3 -m unittest discover tests              # includes the leak test
 ```
 

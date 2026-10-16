@@ -19,6 +19,9 @@ from html import escape
 from pathlib import Path
 from string import Template
 
+if sys.version_info < (3, 7):
+    sys.exit("bonfire needs Python 3.7+")
+
 ROOT = Path(__file__).resolve().parent
 CARD_DIR = ROOT / "card"
 THEMES_FILE = ROOT / "data" / "themes.json"
