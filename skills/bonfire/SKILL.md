@@ -43,7 +43,7 @@ The scripts live in the repository root, two levels above this skill's directory
    Then read `<tmp>/recap.json`.
 
 3. **Preview before rendering.** Show a compact summary so the user sees exactly what
-   will be posted: period, projects (count), sessions, active time, tokens out, cache
+   will be posted: period, projects (count), sessions, prompts, tokens out, cache
    hit, top 3 tools, top 3 languages, streak, unlocked achievements. Mention that the
    JSON has numbers only and offer to show it in full. If there were no sessions in
    the period, say so and stop.

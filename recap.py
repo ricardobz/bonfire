@@ -68,6 +68,19 @@ def tool_label(name):
     return "MCP" if name.startswith("mcp__") else name
 
 
+def is_prompt(entry):
+    """A message the user typed: not a tool result, slash-command echo, IDE context
+    or interruption notice. Only checks how the text starts, never stores it."""
+    if entry.get("isMeta"):
+        return False
+    content = (entry.get("message") or {}).get("content")
+    texts = [content] if isinstance(content, str) else [
+        b.get("text") for b in content if isinstance(b, dict) and b.get("type") == "text"
+    ] if isinstance(content, list) else []
+    return any(isinstance(t, str) and t.strip()
+               and not t.startswith(("<", "[Request interrupted")) for t in texts)
+
+
 def active_minutes(times, idle_gap):
     times = sorted(times)
     total = sum((b - a for a, b in zip(times, times[1:]) if b - a <= idle_gap), timedelta())
@@ -109,6 +122,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
     files_touched, project_files = set(), set()
     languages, project_languages = Counter(), Counter()
     subagents = 0
+    prompts = 0
 
     for project_dir, sidechain, entry in iter_entries(project_dirs):
         if entry.get("type") not in ("user", "assistant"):
@@ -125,6 +139,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
         hours[ts.hour] += 1
         if not sidechain and entry.get("sessionId"):
             session_times.setdefault(entry["sessionId"], []).append(ts)
+        if entry["type"] == "user" and not sidechain and is_prompt(entry):
+            prompts += 1
 
         message = entry.get("message")
         if entry["type"] != "assistant" or not isinstance(message, dict):
@@ -205,6 +221,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
         },
         "projects": len(projects),
         "sessions": len(sessions),
+        "prompts": prompts,
         "active_minutes": sum(s["active_minutes"] for s in sessions),
         "active_days": len(active_days),
         "streak_days": streak_until(all_days, active_days[-1]) if active_days else 0,

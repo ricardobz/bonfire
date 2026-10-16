@@ -65,6 +65,12 @@ def fixture_lines():
                            "content": "CANARY output"}]),
         # Long pause: 10:06 -> 11:00 doesn't count as active time.
         user(t("11:00"), "CANARY again"),
+        # Not prompts: slash-command echo, meta entry, interruption, IDE context alone.
+        user(t("11:01"), "<command-name>/CANARY</command-name>"),
+        user(t("11:01"), "CANARY caveat", isMeta=True),
+        user(t("11:02"), [{"type": "text", "text": "[Request interrupted by user]"}]),
+        user(t("11:02"), [{"type": "text", "text": "<ide_opened_file>CANARY</ide_opened_file>"},
+                          {"type": "text", "text": "CANARY typed after IDE context"}]),
         assistant(t("11:04"), "m3", [tool("t7", "Edit", file_path="/x/CANARY.py"),
                                      tool("t8", "Write",
                                           file_path=SECRET_PROJECT + "/CANARY.html")]),
@@ -110,6 +116,7 @@ class RecapTest(unittest.TestCase):
         data = json.loads(self.run_cli("--days", "1"))
         self.assertEqual(data["projects"], 1)
         self.assertEqual(data["sessions"], 1)  # the subagent is not a session
+        self.assertEqual(data["prompts"], 3)  # 10:00, 11:00 and the one after IDE context
         self.assertEqual(data["active_minutes"], 6 + 4)
         self.assertEqual(data["streak_days"], 2)
         self.assertEqual(data["active_days"], 1)

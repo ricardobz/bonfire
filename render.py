@@ -65,8 +65,11 @@ def title_for(theme, period):
 
 
 def stats_html(recap):
+    # Older JSON without prompts still shows active time.
+    first = ((format_count(recap["prompts"]), "prompts") if "prompts" in recap
+             else (format_minutes(recap["active_minutes"]), "active"))
     stats = [
-        (format_minutes(recap["active_minutes"]), "active"),
+        first,
         (str(recap["sessions"]), "sessions"),
         (format_count(recap["tokens"]["output"]), "tokens out"),
         (f"{recap['cache_hit_rate'] * 100:.1f}%", "cache hit"),

@@ -82,6 +82,10 @@ class RenderTest(unittest.TestCase):
         self.assertIn("JavaScript 75% · Python 25%", html)
         self.assertIn("Python 100%", render.build_html(recap(project_languages={}), "bonfire"))
 
+    def test_prompts_replace_active_time(self):
+        self.assertIn("<b>189</b><span>prompts</span>", render.stats_html(recap(prompts=189)))
+        self.assertIn("<b>2h05</b><span>active</span>", render.stats_html(recap()))
+
     def test_text_is_escaped(self):
         html = render.build_html(recap(tools={"<script>": 1}), "bonfire")
         self.assertNotIn("<script>", html)
