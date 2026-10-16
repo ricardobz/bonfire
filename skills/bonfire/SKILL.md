@@ -2,7 +2,7 @@
 name: bonfire
 description: Make a shareable "Strava for devs" card of the user's Claude Code usage (day, week, sprint, month or all time) with pixel-art save-point themes and achievements. Use when the user runs /bonfire or asks for their Claude Code recap, weekly/daily stats card, or usage summary to post.
 argument-hint: "[day|week|sprint|month|all] [--theme THEME_ID] [--paths DIR ...] [--alias NAME]"
-allowed-tools: Bash(python3:*), Read, AskUserQuestion
+allowed-tools: Bash(uv run:*), Bash(uv --version), Read, AskUserQuestion
 ---
 
 # /bonfire
@@ -24,6 +24,10 @@ The scripts live in the repository root, two levels above this skill's directory
 
 ## Steps
 
+0. **Check uv.** Run `uv --version`. If it fails, stop and tell the user bonfire needs
+   [uv](https://docs.astral.sh/uv/) (it provides a suitable Python), with the install
+   command: `curl -LsSf https://astral.sh/uv/install.sh | sh`.
+
 1. **Parse the arguments.** The period maps to `--days` and a default theme:
 
    | Period | `--days` | Default theme |
@@ -38,7 +42,7 @@ The scripts live in the repository root, two levels above this skill's directory
 
 2. **Collect.** Run, with a timestamped output in the scratchpad (or `/tmp`):
    ```sh
-   python3 "$ROOT/recap.py" --days N [--paths ...] --out <tmp>/recap.json
+   uv run "$ROOT/recap.py" --days N [--paths ...] --out <tmp>/recap.json
    ```
    Then read `<tmp>/recap.json`.
 
@@ -57,7 +61,7 @@ The scripts live in the repository root, two levels above this skill's directory
 5. **Render.**
    ```sh
    mkdir -p ~/Pictures/bonfire
-   python3 "$ROOT/render.py" <tmp>/recap.json --theme THEME [--alias "NAME"] \
+   uv run "$ROOT/render.py" <tmp>/recap.json --theme THEME [--alias "NAME"] \
      --out ~/Pictures/bonfire/<YYYY-MM-DD>-<PERIOD>-<THEME>.png
    ```
    Open the PNG with Read and check it before reporting (text inside the card, nothing

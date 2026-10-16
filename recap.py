@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.7"
+# dependencies = []
+# ///
 """bonfire collector: reads Claude Code logs and prints JSON with aggregates only.
 
 Privacy: no prompt, reply, path, file name or project name ever leaves this script.

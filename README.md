@@ -18,6 +18,18 @@ Not published: personal use only for now. The name `bonfire` clashes with the
 `vieko/bonfire` plugin (cross-session memory); if this ever becomes a plugin, pick a
 more distinctive name first. The `ricardobz/bonfire` repository on GitHub is public.
 
+## Requirements
+
+- [Claude Code](https://claude.com/claude-code): its local logs are the data, and
+  `/bonfire` runs inside it.
+- [uv](https://docs.astral.sh/uv/): picks (or downloads) a Python 3.7+ for the scripts.
+  Install: `curl -LsSf https://astral.sh/uv/install.sh | sh`. Without uv, run the
+  scripts with any `python3` 3.7+ instead of `uv run`.
+- Google Chrome or Chromium, to render the PNG (`BONFIRE_CHROME` points to another
+  binary).
+
+No Python packages: standard library only.
+
 ## Usage
 
 Install the skill once (works in any project; open a new session afterwards).
@@ -50,8 +62,8 @@ Themes: the ids in `data/themes.json`.
 
   ```sh
   cd path/to/bonfire
-  python3 recap.py --days 7 --out /tmp/recap.json   # 1, 7, 15, 30 or all
-  python3 render.py /tmp/recap.json --theme bonfire --out ~/Pictures/bonfire/week.png
+  uv run recap.py --days 7 --out /tmp/recap.json    # 1, 7, 15, 30 or all
+  uv run render.py /tmp/recap.json --theme bonfire --out ~/Pictures/bonfire/week.png
   ```
 
   `render.py` accepts `--alias "Name"`.
@@ -63,20 +75,19 @@ Themes: the ids in `data/themes.json`.
 
 ## Run locally
 
-Python 3 only (stdlib). The collector prints the aggregated JSON:
+See [Requirements](#requirements). The collector prints the aggregated JSON:
 
 ```sh
-python3 recap.py --days 7                       # week, all folders
-python3 recap.py --days 1 --paths ~/code/x      # today, only these folders
-python3 -m unittest discover tests              # includes the leak test
+uv run recap.py --days 7                        # week, all folders
+uv run recap.py --days 1 --paths ~/code/x       # today, only these folders
+uv run python -m unittest discover tests        # includes the leak test
 ```
 
-PNG card (1080x1920, needs Google Chrome or Chromium; `BONFIRE_CHROME` points to
-another binary):
+PNG card (1080x1920):
 
 ```sh
-python3 recap.py --days 7 --out recap_week.json
-python3 render.py recap_week.json --theme bonfire --out card.png
+uv run recap.py --days 7 --out recap_week.json
+uv run render.py recap_week.json --theme bonfire --out card.png
 ```
 
 Themes in `data/themes.json` (background, color, title per period); layout in

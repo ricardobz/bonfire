@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.7"
+# dependencies = []
+# ///
 """Renders the bonfire card: recap JSON + theme -> 1080x1920 PNG via headless Chrome.
 
 Usage:
