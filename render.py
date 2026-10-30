@@ -66,7 +66,7 @@ def format_period(period, projects, alias=None):
 
 
 def title_for(theme, period):
-    """Title for the period (day/week/sprint/month/all); falls back to the week title."""
+    """Title for the period (day/week/sprint/month/all/task); falls back to the week title."""
     titles = theme["title"]
     return titles.get(period.get("kind")) or titles["week"]
 

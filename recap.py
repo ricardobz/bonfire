@@ -12,6 +12,7 @@ language names).
 Usage:
     python3 recap.py --days 7
     python3 recap.py --days 1 --paths ~/worktest/bonfire ~/worktest/manezinho-game
+    python3 recap.py --days all --branch PROJ-1234
 """
 
 import argparse
@@ -105,10 +106,14 @@ def streak_until(days, last_day):
     return streak
 
 
-def collect(root, days, paths=None, now=None, idle_minutes=15):
-    """days: number of days including today, or "all" for everything still in the logs."""
+def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
+    """days: number of days including today, or "all" for everything still in the logs.
+    branch: only entries whose git branch contains this text, e.g. a task key."""
     now = now or datetime.now().astimezone()
-    kind = "all" if days == "all" else PERIOD_KINDS.get(days, "custom")
+    if branch:
+        kind = "task"
+    else:
+        kind = "all" if days == "all" else PERIOD_KINDS.get(days, "custom")
     start = None if days == "all" else (now - timedelta(days=days - 1)).replace(
         hour=0, minute=0, second=0, microsecond=0)
     idle_gap = timedelta(minutes=idle_minutes)
@@ -136,6 +141,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15):
 
     for project_dir, sidechain, entry in iter_entries(project_dirs):
         if entry.get("type") not in ("user", "assistant"):
+            continue
+        if branch and branch not in str(entry.get("gitBranch") or ""):
             continue
         ts = parse_ts(entry.get("timestamp"))
         if ts is None:
@@ -264,6 +271,8 @@ def main(argv=None):
     parser.add_argument("--days", type=lambda v: v if v == "all" else int(v), default=7,
                         help='window in days including today (1 = today, 7, 15, 30) or "all"')
     parser.add_argument("--paths", nargs="+", help="only these project folders (default: all)")
+    parser.add_argument("--branch", help="only work on git branches containing this text, "
+                        "e.g. a task key (the name never reaches the JSON)")
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT, help=argparse.SUPPRESS)
     parser.add_argument("--now", help=argparse.SUPPRESS)  # ISO, for tests
     parser.add_argument("--idle-minutes", type=int, default=15,
@@ -274,7 +283,7 @@ def main(argv=None):
         parser.error("--days must be >= 1")
 
     now = parse_ts(args.now) if args.now else None
-    recap = collect(args.root, args.days, args.paths, now, args.idle_minutes)
+    recap = collect(args.root, args.days, args.paths, now, args.idle_minutes, args.branch)
     text = json.dumps(recap, indent=2, ensure_ascii=False)
     if args.out:
         args.out.write_text(text + "\n", encoding="utf-8")

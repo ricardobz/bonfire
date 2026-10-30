@@ -8,7 +8,8 @@
       "week": "Quests of the week cleared",
       "sprint": "Quests of the sprint cleared",
       "month": "Quests of the month cleared",
-      "all": "Every quest cleared so far"
+      "all": "Every quest cleared so far",
+      "task": "Quest cleared, bonfire lit"
     }
   },
   "end-of-day": {
@@ -20,7 +21,8 @@
       "week": "This week's harvest is in",
       "sprint": "This sprint's harvest is in",
       "month": "This month's harvest is in",
-      "all": "Every harvest so far"
+      "all": "Every harvest so far",
+      "task": "This task's harvest is in"
     }
   },
   "captains-log": {
@@ -32,7 +34,8 @@
       "week": "Missions of the week logged",
       "sprint": "Missions of the sprint logged",
       "month": "Missions of the month logged",
-      "all": "Complete mission archive"
+      "all": "Complete mission archive",
+      "task": "Mission accomplished, log closed"
     }
   },
   "bench": {
@@ -44,7 +47,8 @@
       "week": "Week explored, progress saved",
       "sprint": "Sprint explored, progress saved",
       "month": "Month explored, progress saved",
-      "all": "The whole map, explored"
+      "all": "The whole map, explored",
+      "task": "Area cleared, progress saved"
     }
   },
   "site-of-grace": {
@@ -56,7 +60,8 @@
       "week": "Grace found, week complete",
       "sprint": "Grace found, sprint complete",
       "month": "Grace found, month complete",
-      "all": "Every grace discovered"
+      "all": "Every grace discovered",
+      "task": "Grace found, task complete"
     }
   },
   "typewriter": {
@@ -66,7 +71,8 @@
     "title": {
       "day": "Progress typed and saved",
       "week": "Progress typed and saved",
-      "all": "The complete archive, typed"
+      "all": "The complete archive, typed",
+      "task": "Task typed and saved"
     }
   },
   "mountain-campfire": {
@@ -78,7 +84,8 @@
       "week": "Summit of the week reached",
       "sprint": "Summit of the sprint reached",
       "month": "Summit of the month reached",
-      "all": "The whole mountain climbed"
+      "all": "The whole mountain climbed",
+      "task": "Summit of the task reached"
     }
   },
   "save-star": {
@@ -87,7 +94,8 @@
     "accent_soft": "#6b3fa0",
     "title": {
       "day": "Filled with determination",
-      "week": "Filled with determination"
+      "week": "Filled with determination",
+      "task": "Task done, filled with determination"
     }
   },
   "save-crystal": {
@@ -99,7 +107,8 @@
       "week": "Week's journey crystallized",
       "sprint": "Sprint's journey crystallized",
       "month": "Month's journey crystallized",
-      "all": "The whole journey crystallized"
+      "all": "The whole journey crystallized",
+      "task": "Task's journey crystallized"
     }
   },
   "sculptors-idol": {
@@ -108,7 +117,8 @@
     "accent_soft": "#7a2a1e",
     "title": {
       "day": "Rest, then rise again",
-      "week": "Rest, then rise again"
+      "week": "Rest, then rise again",
+      "task": "Task done, rest then rise again"
     }
   },
   "healing-center": {
@@ -117,7 +127,8 @@
     "accent_soft": "#8a4a64",
     "title": {
       "day": "Your team is fully healed",
-      "week": "Your team is fully healed"
+      "week": "Your team is fully healed",
+      "task": "Task done, team fully healed"
     }
   },
   "mdr-terminal": {
@@ -129,7 +140,8 @@
       "week": "Week's file refined, 100%",
       "sprint": "Sprint's file refined, 100%",
       "month": "Month's file refined, 100%",
-      "all": "Every file refined, 100%"
+      "all": "Every file refined, 100%",
+      "task": "Task file refined, 100%"
     }
   },
   "awards-night": {
@@ -139,7 +151,8 @@
     "title": {
       "day": "And the award goes to… you",
       "week": "And the award goes to… you",
-      "all": "Lifetime achievement award"
+      "all": "Lifetime achievement award",
+      "task": "And the task award goes to… you"
     }
   },
   "dnd-table": {
@@ -151,7 +164,8 @@
       "week": "Campaign session complete",
       "sprint": "Campaign arc complete",
       "month": "Campaign arc complete",
-      "all": "The whole campaign so far"
+      "all": "The whole campaign so far",
+      "task": "Quest complete, roll for the next"
     }
   },
   "fsociety-terminal": {
@@ -163,7 +177,8 @@
       "week": "Week's exploit executed",
       "sprint": "Sprint's exploit executed",
       "month": "Month's exploit executed",
-      "all": "Every exploit executed"
+      "all": "Every exploit executed",
+      "task": "Task exploit executed"
     }
   },
   "ticket-rail": {
@@ -172,7 +187,8 @@
     "accent_soft": "#3a6ea5",
     "title": {
       "day": "All tickets out, yes chef",
-      "week": "All tickets out, yes chef"
+      "week": "All tickets out, yes chef",
+      "task": "Ticket out, yes chef"
     }
   },
   "overseer-terminal": {
@@ -184,7 +200,8 @@
       "week": "Weekly Overseer report: productivity approved",
       "sprint": "Sprint directive complete",
       "month": "Monthly vault audit passed",
-      "all": "Vault log: since the doors sealed"
+      "all": "Vault log: since the doors sealed",
+      "task": "Overseer report: task approved"
     }
   },
   "wasteland": {
@@ -196,7 +213,8 @@
       "week": "Week's quests logged",
       "sprint": "Sprint's caravan arrived",
       "month": "A month of scavenging",
-      "all": "War never changes. Neither does shipping."
+      "all": "War never changes. Neither does shipping.",
+      "task": "Quest logged. Shipping never changes."
     }
   }
 }

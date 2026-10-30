@@ -1,7 +1,7 @@
 ---
 name: bonfire
-description: Make a shareable "Strava for devs" card of the user's Claude Code usage (day, week, sprint, month or all time) with pixel-art save-point themes and achievements. Use when the user runs /bonfire or asks for their Claude Code recap, weekly/daily stats card, or usage summary to post.
-argument-hint: "[day|week|sprint|month|all] [--theme THEME_ID] [--paths DIR ...] [--alias NAME]"
+description: Make a shareable "Strava for devs" card of the user's Claude Code usage (day, week, sprint, month, all time or one task) with pixel-art save-point themes and achievements. Use when the user runs /bonfire or asks for their Claude Code recap, weekly/daily stats card, or usage summary to post.
+argument-hint: "[day|week|sprint|month|all|task KEY] [--theme THEME_ID] [--paths DIR ...] [--alias NAME]"
 allowed-tools: Bash(uv run:*), Bash(uv --version), Read, AskUserQuestion
 ---
 
@@ -37,12 +37,16 @@ The scripts live in the repository root, two levels above this skill's directory
    | `sprint` | `15` | `mdr-terminal` |
    | `month` | `30` | `typewriter` |
    | `all` | `all` | `typewriter` |
+   | `task KEY` | `all` | `site-of-grace` |
 
+   `task KEY` also passes `--branch KEY`: only work on git branches containing the
+   key counts, e.g. `fb-PROJ-1234-...`. The user typed the key, so use it as the
+   default `--alias`.
    Keep `--theme`, `--paths` (real project directories) and `--alias` if given.
 
 2. **Collect.** Run, with a timestamped output in the scratchpad (or `/tmp`):
    ```sh
-   uv run "$ROOT/recap.py" --days N [--paths ...] --out <tmp>/recap.json
+   uv run "$ROOT/recap.py" --days N [--branch KEY] [--paths ...] --out <tmp>/recap.json
    ```
    Then read `<tmp>/recap.json`.
 

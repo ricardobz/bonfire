@@ -46,6 +46,7 @@ ln -s "$(pwd)/skills/bonfire" ~/.claude/skills/bonfire
 | End of the sprint | `/bonfire sprint` | 15 days | mdr-terminal |
 | End of the month | `/bonfire month` | 30 days | typewriter |
 | Everything there is | `/bonfire all` | since the oldest log | typewriter |
+| End of a task | `/bonfire task PROJ-1234` | work on branches containing the key | site-of-grace |
 | Skip the theme question | `/bonfire week --theme captains-log` | | the one you pick |
 | Only some projects | `/bonfire day --paths ~/code/my-app` | | |
 | Project name on the card | `/bonfire all --paths ~/code/my-app --alias "My App"` | | |
@@ -80,6 +81,7 @@ See [Requirements](#requirements). The collector prints the aggregated JSON:
 ```sh
 uv run recap.py --days 7                        # week, all folders
 uv run recap.py --days 1 --paths ~/code/x       # today, only these folders
+uv run recap.py --days all --branch PROJ-1234   # one task, by git branch
 uv run python -m unittest discover tests        # includes the leak test
 ```
 

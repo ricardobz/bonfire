@@ -53,6 +53,7 @@ class RenderTest(unittest.TestCase):
         theme = render.load_themes()["bonfire"]
         self.assertEqual(render.title_for(theme, {"kind": "sprint"}), "Quests of the sprint cleared")
         self.assertEqual(render.title_for(theme, {"kind": "custom"}), theme["title"]["week"])
+        self.assertEqual(render.title_for(theme, {"kind": "task"}), "Quest cleared, bonfire lit")
         self.assertEqual(render.title_for(render.load_themes()["save-star"], {"kind": "all"}),
                          "Filled with determination")
 

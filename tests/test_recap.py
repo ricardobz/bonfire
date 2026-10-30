@@ -151,6 +151,19 @@ class RecapTest(unittest.TestCase):
         self.assertEqual(json.loads(self.run_cli("--paths", SECRET_PROJECT))["sessions"], 1)
         self.assertEqual(json.loads(self.run_cli("--paths", "/other"))["sessions"], 0)
 
+    def test_branch_filter(self):
+        project = self.root / recap.encode_project_path(SECRET_PROJECT)
+        with (project / "CANARY-task.jsonl").open("w") as fh:
+            for ts in ("2026-10-10T12:00:00Z", "2026-10-11T12:00:00Z"):
+                fh.write(json.dumps(user(ts, "CANARY task prompt", session="CANARY-task",
+                                         gitBranch="fb-CANARY-9999-x")) + "\n")
+        out = self.run_cli("--days", "all", "--branch", "CANARY-9999")
+        self.assertNotIn(CANARY, out)
+        data = json.loads(out)
+        self.assertEqual((data["sessions"], data["prompts"]), (1, 2))
+        self.assertEqual((data["period"]["kind"], data["period"]["from"]), ("task", "2026-10-10"))
+        self.assertEqual(json.loads(self.run_cli("--branch", "OTHER-1"))["sessions"], 0)
+
 
 class ParseTsTest(unittest.TestCase):
     def test_bad_timestamps_are_skipped(self):
