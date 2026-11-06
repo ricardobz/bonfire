@@ -3,6 +3,7 @@
 import io
 import json
 import os
+import subprocess
 import sys
 import time
 import tempfile
@@ -257,6 +258,63 @@ class RepoActivityTest(unittest.TestCase):
                              "two": [edit("c", "beta"), edit("d", "gamma")]})
         self.assertEqual(sorted(s["repos"] for s in data["session_list"]), [2, 2])
         self.assertEqual(data["heatmap"][-1]["repos"], 3)
+
+
+class CommitLanguagesTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        base = Path(self.tmp.name)
+        self.root = base / "logs"
+        self.work = base / "work"
+        self.work.mkdir()
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_languages_come_from_own_commits(self):
+        repo = self.make_git_repo()
+        self.commit(repo, "yesterday.rs", "me@example.com", "2026-10-12T12:00:00+00:00")
+        self.commit(repo, "app.js", "me@example.com", "2026-10-13T12:00:00+00:00")
+        self.commit(repo, "CANARY-ação.py", "me@example.com", "2026-10-13T12:01:00+00:00")
+        self.commit(repo, "photo.png", "me@example.com", "2026-10-13T12:02:00+00:00")
+        self.commit(repo, "theirs.go", "notme@example.com", "2026-10-13T12:03:00+00:00")
+        result = self.collect_with_cwd(repo, 1)
+        self.assertEqual(result["project_languages"], {"JavaScript": 1, "Python": 1})
+        self.assertEqual(result["languages"], {"JavaScript": 1, "Python": 1})
+        self.assertEqual(result["project_files_touched"], 2)
+        self.assertNotIn(CANARY, json.dumps(result))
+
+    def test_task_ignores_commits(self):
+        repo = self.make_git_repo()
+        self.commit(repo, "app.js", "me@example.com", "2026-10-13T12:00:00+00:00")
+        result = self.collect_with_cwd(repo, "all", branch="PROJ-1")
+        self.assertEqual(result["languages"], {})
+
+    def make_git_repo(self):
+        repo = self.work / "gitrepo"
+        repo.mkdir()
+        self.git(repo, "init", "-q")
+        self.git(repo, "config", "user.email", "me@example.com")
+        self.git(repo, "config", "user.name", "Me")
+        self.git(repo, "config", "commit.gpgsign", "false")
+        return repo
+
+    def git(self, repo, *args, **env):
+        subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True,
+                       env={**os.environ, **env})
+
+    def commit(self, repo, name, email, date):
+        (repo / name).write_text("x")
+        self.git(repo, "add", name)
+        self.git(repo, "commit", "-qm", "work", f"--author=Someone <{email}>",
+                 GIT_AUTHOR_DATE=date, GIT_COMMITTER_DATE=date)
+
+    def collect_with_cwd(self, repo, days, branch=None):
+        project = self.root / recap.encode_project_path(repo)
+        project.mkdir(parents=True)
+        entry = assistant("2026-10-13T12:00:00Z", "git1", [], cwd=str(repo), gitBranch="PROJ-1")
+        (project / "s.jsonl").write_text(json.dumps(entry) + "\n")
+        return recap.collect(self.root, days, now=recap.parse_ts(NOW), branch=branch)
 
 
 class ParseTsTest(unittest.TestCase):

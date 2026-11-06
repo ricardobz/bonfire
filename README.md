@@ -73,6 +73,9 @@ Themes: the ids in `data/themes.json`.
   (`cleanupPeriodDays` in `~/.claude/settings.json`). On 2026-10-14 there were logs
   back to 2026-08-26 (50 days).
 - Above 7 days the card's heatmap sums by weekday (Mon to Sun × 24 hours).
+- Languages combine files changed through Claude's edit tools with your own commits
+  (matched by the repo's `user.email`) in repos Claude worked in during the period.
+  Images and unknown extensions are skipped. Task periods use the edit tools only.
 
 ## Run locally
 

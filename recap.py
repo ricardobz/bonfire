@@ -7,7 +7,8 @@
 
 Privacy: no prompt, reply, path, file name or project name ever leaves this script.
 The JSON is built only from numbers and from values in closed lists (tool, model and
-language names).
+language names). Besides the logs it asks git for the user's own commits in repos
+Claude worked in; only the extension of those file names is used.
 
 Usage:
     python3 recap.py --days 7
@@ -21,6 +22,7 @@ import json
 import achievements
 import os
 import re
+import subprocess
 import sys
 from collections import Counter
 from datetime import datetime, time, timedelta
@@ -128,6 +130,29 @@ def repo_root(path):
     return next((str(p) for p in (path, *path.parents) if os.path.exists(p / ".git")), None)
 
 
+def git_output(repo, *args):
+    """Stdout of a git command in repo; empty if git is missing or the command fails."""
+    try:
+        result = subprocess.run(["git", "-C", repo, *args], capture_output=True, text=True,
+                                encoding="utf-8", errors="replace", timeout=30)
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    return result.stdout if result.returncode == 0 else ""
+
+
+def committed_files(repo, since, until):
+    """Paths in the commits of this repo's git user on any local or remote branch.
+    -z keeps non-ASCII names unquoted; the <> make the author match the whole email."""
+    email = git_output(repo, "config", "user.email").strip()
+    if not email:
+        return []
+    output = git_output(repo, "log", "--branches", "--remotes", "--no-merges",
+                        "--fixed-strings", f"--author=<{email}>",
+                        f"--since={since.isoformat()}", f"--until={until.isoformat()}",
+                        "--name-only", "--pretty=format:", "-z")
+    return [os.path.join(repo, name.strip()) for name in output.split("\0") if name.strip()]
+
+
 def active_minutes(times, idle_gap):
     times = sorted(times)
     total = sum((b - a for a, b in zip(times, times[1:]) if b - a <= idle_gap), timedelta())
@@ -165,7 +190,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
     session_edits = Counter()
     session_commits = Counter()
     session_repos, day_repos = {}, {}
-    projects = set()
+    projects, worked_repos = set(), set()
     tokens = Counter()
     tools = Counter()
     models = Counter()
@@ -190,6 +215,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
             continue
 
         projects.add(project_dir.name)
+        if isinstance(entry.get("cwd"), str):
+            worked_repos.add(repo_root(entry["cwd"]))
         heatmap.setdefault(ts.date(), [0] * 24)[ts.hour] += 1
         hours[ts.hour] += 1
         if not sidechain and entry.get("sessionId"):
@@ -239,6 +266,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
                 session_repos.setdefault(entry.get("sessionId"), set()).add(repo)
                 day_repos.setdefault(ts.date(), set()).add(repo)
                 projects.add(encode_project_path(repo))
+                worked_repos.add(repo)
             if name in FILE_TOOLS and isinstance(file_path, str):
                 language = LANGUAGES.get(Path(file_path).suffix.lower(), "Other")
                 if file_path not in files_touched:
@@ -257,6 +285,21 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
         days = (now.date() - first_day).days + 1
     for i in range(days):
         heatmap.setdefault((start + timedelta(days=i)).date(), [0] * 24)
+
+    # Edits made through Bash or by hand never reach the file tools; commits catch them.
+    # A task has no date range of its own, so it stays on what the logs saw.
+    if not branch:
+        for repo in sorted(filter(None, worked_repos)):
+            for path in committed_files(repo, start, now):
+                language = LANGUAGES.get(Path(path).suffix.lower())
+                if language is None:  # images and other assets are not a language
+                    continue
+                if path not in files_touched:
+                    files_touched.add(path)
+                    languages[language] += 1
+                if path not in project_files:
+                    project_files.add(path)
+                    project_languages[language] += 1
 
     sessions = []
     for session_id, times in session_times.items():
