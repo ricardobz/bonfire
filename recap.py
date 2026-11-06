@@ -238,6 +238,7 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
             for repo in filter(None, map(repo_root, changed)):
                 session_repos.setdefault(entry.get("sessionId"), set()).add(repo)
                 day_repos.setdefault(ts.date(), set()).add(repo)
+                projects.add(encode_project_path(repo))
             if name in FILE_TOOLS and isinstance(file_path, str):
                 language = LANGUAGES.get(Path(file_path).suffix.lower(), "Other")
                 if file_path not in files_touched:

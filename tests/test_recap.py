@@ -234,6 +234,22 @@ class RepoActivityTest(unittest.TestCase):
                          ["fast-travel"])
         self.assertNotIn(self.tmp.name, json.dumps(data))
 
+    def test_projects_join_session_folders_and_changed_repos(self):
+        block = ("2026-10-13T10:00:00Z", tool("a", "Edit", file_path=f"{self.work}/beta/x.py"))
+        # The log folder "p" holds the session; beta only got changed from there.
+        self.assertEqual(self.collect({"one": [block]})["projects"], 2)
+        # A planning session with no changes still counts its own folder.
+        (self.root / "planning").mkdir()
+        with (self.root / "planning" / "two.jsonl").open("w") as fh:
+            fh.write(json.dumps(user("2026-10-13T11:00:00Z", "plan", session="two")) + "\n")
+        self.assertEqual(recap.collect(self.root, 3, now=recap.parse_ts(NOW))["projects"], 3)
+
+    def test_project_changed_from_its_own_session_counts_once(self):
+        self.project.rename(self.root / recap.encode_project_path(self.work / "beta"))
+        self.project = self.root / recap.encode_project_path(self.work / "beta")
+        block = ("2026-10-13T10:00:00Z", tool("a", "Edit", file_path=f"{self.work}/beta/x.py"))
+        self.assertEqual(self.collect({"one": [block]})["projects"], 1)
+
     def test_day_counts_repos_across_sessions(self):
         edit = lambda i, repo: ("2026-10-13T10:00:00Z", tool(
             i, "Edit", file_path=f"{self.work}/{repo}/x.py"))
