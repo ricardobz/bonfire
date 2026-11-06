@@ -19,10 +19,12 @@ import argparse
 import json
 
 import achievements
+import os
 import re
 import sys
 from collections import Counter
 from datetime import datetime, time, timedelta
+from functools import lru_cache
 from pathlib import Path
 
 if sys.version_info < (3, 7):
@@ -32,6 +34,12 @@ DEFAULT_ROOT = Path.home() / ".claude" / "projects"
 SUBAGENT_TOOLS = {"Task", "Agent"}
 FILE_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
 PERIOD_KINDS = {1: "day", 7: "week", 15: "sprint", 30: "month"}
+HEREDOC_BODY = re.compile(r"""<<-?\s*['"]?(\w+)['"]?.*?^\s*\1\s*$""", re.DOTALL | re.MULTILINE)
+SHELL_SEPARATOR = re.compile(r"&&|\|\||[;\n|]")
+SHELL_PREFIX = re.compile(r"^[(\s]*(?:(?:do|then)\s+)?")
+PATH_ARG = r"""("[^"]*"|'[^']*'|[^\s"']+)"""
+CD_COMMAND = re.compile(r"^cd\s+" + PATH_ARG)
+COMMIT_COMMAND = re.compile(r"^(?:\w+=\S*\s+)*git\s+(?:-C\s+" + PATH_ARG + r"\s+)?(?:-c\s+\S+\s+)*commit\b")
 LANGUAGES = {
     ".py": "Python", ".js": "JavaScript", ".mjs": "JavaScript", ".cjs": "JavaScript",
     ".jsx": "JavaScript", ".ts": "TypeScript", ".tsx": "TypeScript",
@@ -92,6 +100,34 @@ def is_prompt(entry):
                and not t.startswith(("<", "[Request interrupted")) for t in texts)
 
 
+def shell_path(folder, arg):
+    return os.path.join(folder, os.path.expanduser(arg.strip("\"'")))
+
+
+def commit_folders(command, cwd):
+    """Folder of each new commit in a shell command. Only reads the command's shape;
+    amends add nothing, and a commit that failed still counts."""
+    folder = cwd if isinstance(cwd, str) else ""
+    for segment in SHELL_SEPARATOR.split(HEREDOC_BODY.sub("", command)):
+        segment = SHELL_PREFIX.sub("", segment, count=1)
+        cd = CD_COMMAND.match(segment)
+        if cd:
+            folder = shell_path(folder, cd.group(1))
+            continue
+        commit = COMMIT_COMMAND.match(segment)
+        if commit and "--amend" not in segment:
+            yield shell_path(folder, commit.group(1) or "")
+
+
+@lru_cache(maxsize=None)
+def repo_root(path):
+    """Nearest folder holding a .git at or above path; None outside any repo."""
+    if not os.path.isabs(path):
+        return None
+    path = Path(os.path.normpath(path))
+    return next((str(p) for p in (path, *path.parents) if os.path.exists(p / ".git")), None)
+
+
 def active_minutes(times, idle_gap):
     times = sorted(times)
     total = sum((b - a for a, b in zip(times, times[1:]) if b - a <= idle_gap), timedelta())
@@ -127,6 +163,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
     all_days = set()
     session_times = {}
     session_edits = Counter()
+    session_commits = Counter()
+    session_repos, day_repos = {}, {}
     projects = set()
     tokens = Counter()
     tools = Counter()
@@ -192,6 +230,14 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
                 session_edits[entry.get("sessionId")] += 1
             tool_input = block.get("input") or {}
             file_path = tool_input.get("file_path") or tool_input.get("notebook_path")
+            changed = [file_path] if name in FILE_TOOLS and isinstance(file_path, str) else []
+            if name == "Bash":
+                commits = list(commit_folders(str(tool_input.get("command", "")), entry.get("cwd")))
+                session_commits[entry.get("sessionId")] += len(commits)
+                changed += commits
+            for repo in filter(None, map(repo_root, changed)):
+                session_repos.setdefault(entry.get("sessionId"), set()).add(repo)
+                day_repos.setdefault(ts.date(), set()).add(repo)
             if name in FILE_TOOLS and isinstance(file_path, str):
                 language = LANGUAGES.get(Path(file_path).suffix.lower(), "Other")
                 if file_path not in files_touched:
@@ -220,6 +266,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
             "active_minutes": active_minutes(times, idle_gap),
             "wall_minutes": round((times[-1] - times[0]).total_seconds() / 60),
             "edits": session_edits[session_id],
+            "commits": session_commits[session_id],
+            "repos": len(session_repos.get(session_id, ())),
         })
     sessions.sort(key=lambda s: s["start"])
 
@@ -258,7 +306,8 @@ def collect(root, days, paths=None, now=None, idle_minutes=15, branch=None):
         "project_languages": dict(project_languages.most_common()),
         "models": dict(models.most_common()),
         "peak_hour": hours.most_common(1)[0][0] if hours else None,
-        "heatmap": [{"date": d.isoformat(), "weekday": d.strftime("%a"), "hours": h}
+        "heatmap": [{"date": d.isoformat(), "weekday": d.strftime("%a"), "hours": h,
+                     "repos": len(day_repos.get(d, ()))}
                     for d, h in sorted(heatmap.items())],
         "session_list": sessions,
     }

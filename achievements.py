@@ -72,6 +72,14 @@ def quick_session(recap, max_active_minutes, min_edits):
                for s in recap["session_list"])
 
 
+def session_field_at_least(recap, field, value):
+    return any(s.get(field, 0) >= value for s in recap["session_list"])
+
+
+def day_field_at_least(recap, field, value):
+    return any(d.get(field, 0) >= value for d in recap["heatmap"])
+
+
 def full_weekend(recap):
     active = {date.fromisoformat(d["date"]) for d in recap["heatmap"] if any(d["hours"])}
     return any(d.weekday() == 5 and d + timedelta(days=1) in active for d in active)
@@ -90,7 +98,7 @@ CHECKS = {f.__name__: f for f in (
     at_least, greater_than, metric_greater_than_sum, metric_at_least_times, count_keys_at_least,
     active_between_hours, only_active_on_weekdays_between_hours, session_starts_between_hours,
     sessions_on_one_day_at_least, resumed_on_another_day, quick_session, full_weekend,
-    active_every_day,
+    active_every_day, session_field_at_least, day_field_at_least,
 )}
 
 

@@ -13,10 +13,10 @@ def day(date, *active_hours):
     return {"date": date, "hours": [1 if h in active_hours else 0 for h in range(24)]}
 
 
-def session(start, active_minutes=30, edits=0, end=None, wall_minutes=None):
+def session(start, active_minutes=30, edits=0, end=None, wall_minutes=None, **extra):
     return {"start": start, "end": end or start, "active_minutes": active_minutes,
             "wall_minutes": active_minutes if wall_minutes is None else wall_minutes,
-            "edits": edits}
+            "edits": edits, **extra}
 
 
 def base_recap(**overrides):
@@ -70,6 +70,9 @@ class AchievementsTest(unittest.TestCase):
                                                 "Glob", "Agent"], 1)},
             "lone-wanderer": {"projects": 6},
             "war-never-changes": {"active_days": 7},
+            "fast-travel": {"session_list": [session("2026-10-08T20:00-03:00", repos=3)]},
+            "open-world": {"heatmap": [{**day("2026-10-08", 20), "repos": 5}]},
+            "save-scum": {"session_list": [session("2026-10-08T20:00-03:00", commits=50)]},
         }
         self.assertEqual(set(cases), {r["id"] for r in achievements.load_rules()})
         for achievement_id, overrides in cases.items():
@@ -97,6 +100,10 @@ class AchievementsTest(unittest.TestCase):
         self.assertEqual(unlocked(base_recap(session_list=[late])), set())
         # Surgeon needs edits: no tools at all doesn't count.
         self.assertNotIn("surgeon", unlocked(base_recap(tools={})))
+        # Five repos spread over two days, or sessions, unlock nothing.
+        self.assertEqual(unlocked(base_recap(
+            heatmap=[{**day("2026-10-08", 20), "repos": 4}],
+            session_list=[session("2026-10-08T20:00-03:00", repos=2, commits=49)])), set())
         # A missing tool counts as 0.
         self.assertEqual(unlocked(base_recap(tools={"Read": 1})), {"read-the-manual"})
 

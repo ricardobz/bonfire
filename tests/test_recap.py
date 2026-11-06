@@ -32,9 +32,9 @@ def user(ts, text, session=SESSION, **extra):
             "cwd": SECRET_PROJECT, "message": {"role": "user", "content": text}, **extra}
 
 
-def assistant(ts, msg_id, blocks, session=SESSION, usage=None, **extra):
+def assistant(ts, msg_id, blocks, session=SESSION, usage=None, cwd=SECRET_PROJECT, **extra):
     return {"type": "assistant", "timestamp": ts, "sessionId": session,
-            "requestId": f"req-{msg_id}", "cwd": SECRET_PROJECT,
+            "requestId": f"req-{msg_id}", "cwd": cwd,
             "message": {"id": msg_id, "role": "assistant", "model": "claude-opus-5-5",
                         "content": blocks,
                         "usage": usage or {"input_tokens": 10, "output_tokens": 20,
@@ -163,6 +163,84 @@ class RecapTest(unittest.TestCase):
         self.assertEqual((data["sessions"], data["prompts"]), (1, 2))
         self.assertEqual((data["period"]["kind"], data["period"]["from"]), ("task", "2026-10-10"))
         self.assertEqual(json.loads(self.run_cli("--branch", "OTHER-1"))["sessions"], 0)
+
+
+class CommitFoldersTest(unittest.TestCase):
+    def folders(self, command):
+        return list(recap.commit_folders(command, "/work/a"))
+
+    def test_shapes_seen_in_real_sessions(self):
+        cases = {
+            'git add x && git commit -q -m "msg"': ["/work/a/"],
+            "git commit -q -F - <<'E'\nsubject\nE": ["/work/a/"],
+            "git commit -F - <<'E'\nsee && git commit\nE\ncd /work/b && git commit -m x": ["/work/a/", "/work/b/"],
+            'cd /work/b && git commit -m x': ["/work/b/"],
+            'cd ..\ngit -C b commit -q -m x\ngit -C c commit -q -m y': ["/work/a/../b", "/work/a/../c"],
+            'FOO=1 git -c user.name=x commit -m y': ["/work/a/"],
+            'for r in b; do git -C /work/$r commit -m x; done': ["/work/$r"],
+        }
+        for command, expected in cases.items():
+            with self.subTest(command):
+                self.assertEqual(self.folders(command), expected)
+
+    def test_not_new_commits(self):
+        for command in ("git commit --amend -q -F -", "git log", "grep 'git commit' notes.md",
+                        "cat > notes.md <<'EOF'\ngit commit -m x\nEOF",
+                        'echo "git commit -m x"', "git status && git add ."):
+            with self.subTest(command):
+                self.assertEqual(self.folders(command), [])
+
+    def test_missing_cwd(self):
+        self.assertEqual(recap.repo_root(next(recap.commit_folders("git commit -m x", None))), None)
+
+
+class RepoActivityTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        base = Path(self.tmp.name)
+        self.root = base / "logs"
+        self.work = base / "work"
+        for repo in ("alpha", "beta", "gamma"):
+            (self.work / repo / ".git").mkdir(parents=True)
+        (self.work / "plain").mkdir()
+        self.project = self.root / "p"
+        self.project.mkdir(parents=True)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def collect(self, sessions):
+        for session, blocks in sessions.items():
+            with (self.project / f"{session}.jsonl").open("w") as fh:
+                for i, (ts, block) in enumerate(blocks):
+                    fh.write(json.dumps(assistant(ts, f"{session}-{i}", [block], session=session,
+                                                  cwd=str(self.work / "alpha"))) + "\n")
+        return recap.collect(self.root, 3, now=recap.parse_ts(NOW))
+
+    def test_repos_and_commits(self):
+        data = self.collect({"one": [
+            ("2026-10-13T10:00:00Z", tool("a", "Edit", file_path=f"{self.work}/beta/x.py")),
+            ("2026-10-13T10:01:00Z", tool("b", "Bash", command="git commit -m x")),
+            ("2026-10-13T10:02:00Z", tool("c", "Bash",
+                                          command="cd .. && git -C gamma commit -m y; git -C gamma commit -m z")),
+            # Reading, and writing outside any repo, change no repo.
+            ("2026-10-13T10:03:00Z", tool("d", "Read", file_path=f"{self.work}/plain/x.py")),
+            ("2026-10-13T10:04:00Z", tool("e", "Write", file_path=f"{self.work}/plain/x.py")),
+        ]})
+        session = data["session_list"][0]
+        self.assertEqual((session["repos"], session["commits"]), (3, 3))
+        self.assertEqual([d["repos"] for d in data["heatmap"]], [0, 0, 3])
+        self.assertEqual([a["id"] for a in data["achievements"] if a["id"] == "fast-travel"],
+                         ["fast-travel"])
+        self.assertNotIn(self.tmp.name, json.dumps(data))
+
+    def test_day_counts_repos_across_sessions(self):
+        edit = lambda i, repo: ("2026-10-13T10:00:00Z", tool(
+            i, "Edit", file_path=f"{self.work}/{repo}/x.py"))
+        data = self.collect({"one": [edit("a", "alpha"), edit("b", "beta")],
+                             "two": [edit("c", "beta"), edit("d", "gamma")]})
+        self.assertEqual(sorted(s["repos"] for s in data["session_list"]), [2, 2])
+        self.assertEqual(data["heatmap"][-1]["repos"], 3)
 
 
 class ParseTsTest(unittest.TestCase):

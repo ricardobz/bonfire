@@ -1,5 +1,26 @@
 [
   {
+    "id": "fast-travel",
+    "name": "Fast Travel",
+    "description": "Changed 3 or more repos in one session",
+    "check": "session_field_at_least",
+    "params": {"field": "repos", "value": 3}
+  },
+  {
+    "id": "open-world",
+    "name": "Open World",
+    "description": "Changed 5 or more repos in one day",
+    "check": "day_field_at_least",
+    "params": {"field": "repos", "value": 5}
+  },
+  {
+    "id": "save-scum",
+    "name": "Save Scum",
+    "description": "50 or more commits in one session",
+    "check": "session_field_at_least",
+    "params": {"field": "commits", "value": 50}
+  },
+  {
     "id": "night-owl",
     "name": "Night Owl",
     "description": "Coded between 2am and 5am",
