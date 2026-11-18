@@ -2,11 +2,13 @@
 
 Card backgrounds, generated with the local **Codex CLI** (`codex exec`, same workflow
 as `floripa_game`). Every image costs quota: get Ricardo's ok before each batch, and
-run generations one at a time, never in parallel.
+run at most two generations in parallel.
 
-> **Codex session (bonfire style):** `01a137f3-90b7-7302-a6a6-85a9d4e98daa`
-> (continue with `codex exec resume <session-id>`, attaching approved backgrounds
-> with `-i` to keep the style).
+> **New Codex session per image:**
+> `codex exec -s workspace-write -i assets/backgrounds/bonfire.png -i <closest approved background> "<base + scene>"`.
+> The style comes from the attachments. The old long session
+> `01a137f3-90b7-7302-a6a6-85a9d4e98daa` is kept for reference only: resuming it
+> got slow (9–16 min per image against about 1.5 min in a new session).
 
 Status: ⬜ prompt pending · 📝 prompt ready · 🧪 generated · ✅ approved · ❌ rejected
 
